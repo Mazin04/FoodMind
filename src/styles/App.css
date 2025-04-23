@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+.loader-logo{
+    animation: grow-shrink 2s ease-in-out infinite;
+}
+
+@keyframes grow-shrink {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Makes items not draggable */
+.not-draggable {
+    pointer-events: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
