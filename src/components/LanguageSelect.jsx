@@ -1,11 +1,14 @@
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ReactCountryFlag } from 'react-country-flag'
 import { LANGUAGES } from '@/constants'
 import { useTranslation } from 'react-i18next'
+import { applyStoredTheme, getTheme } from '@/lib/theme';
+
 
 const LanguageSelect = () => {
     const [selectedLanguage, setSelectedLanguage] = useState(LANGUAGES[0])
+    const [isDarkMode, setIsDarkMode] = useState(getTheme());
     const { i18n } = useTranslation();
 
     const onChangeLang = (selectedLang) => {
@@ -13,26 +16,38 @@ const LanguageSelect = () => {
         i18n.changeLanguage(selectedLang.code);
     };
 
+    useEffect(() => {
+        const handleThemeChange = () => {
+          setIsDarkMode(getTheme());
+        };
+    
+        window.addEventListener('storage', handleThemeChange);
+    
+        return () => {
+          window.removeEventListener('storage', handleThemeChange);
+        };
+      }, []);
+
     return (
-        <div className="relative w-fit flex justify-center items-center"> {/* Contenedor con relative */}
+        <div className="relative w-fit flex justify-center items-center">
             <Listbox value={selectedLanguage} onChange={onChangeLang}>
-                <ListboxButton className="flex items-center justify-between min-w-[135px] w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none hover:bg-gray-100 transition duration-200">
+                <ListboxButton className='dark:text-stone-200 dark:bg-neutral-800 dark:border-neutral-600 dark:hover:bg-neutral-700 text-neutral-700 bg-white border-gray-300 hover:bg-gray-100 flex items-center justify-between min-w-[135px] w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none transition duration-200'>
                     <div className="flex items-center space-x-2">
                         <ReactCountryFlag countryCode={selectedLanguage.flag_code} svg className="w-5 h-5" />
                         <span className="hidden xl:flex font-medium">{selectedLanguage.label}</span>
                     </div>
-                    <span className="text-gray-500 ml-2">▼</span> {/* Icono de dropdown */}
+                    <span className='dark:text-stone-200 text-neutral-700 ml-2'>▼</span>
                 </ListboxButton>
 
-                <ListboxOptions className="absolute left-0 top-11 z-20 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden transition-all duration-200">
+                <ListboxOptions className='dark:bg-neutral-800 dark:border-neutral-600 bg-white border-gray-300 absolute left-0 top-11 z-20 w-full mt-1 border rounded-lg shadow-lg overflow-hidden transition-all duration-200'>
                     {LANGUAGES.map((lang) => (
                         <ListboxOption key={lang.code} value={lang} className="cursor-pointer">
                             {({ active, selected }) => (
                                 <div className={`flex items-center space-x-2 px-4 py-2 transition-colors duration-200 
-                                    ${active ? 'bg-gray-200' : 'bg-white'} 
+                                    ${active ? 'dark:bg-neutral-700 bg-gray-200' : 'dark:bg-neutral-800 bg-white'} 
                                     ${selected ? 'font-bold' : 'font-normal'}`}>
                                     <ReactCountryFlag countryCode={lang.flag_code} svg className="w-5 h-5" />
-                                    <span className="hidden xl:flex">{lang.label}</span>
+                                    <span className="hidden xl:flex dark:text-white">{lang.label}</span>
                                 </div>
                             )}
                         </ListboxOption>
