@@ -1,5 +1,9 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
+* {
+    transition: background-color 0.5s ease, color 0.5s ease;
+  }
 .loader-logo{
     animation: grow-shrink 2s ease-in-out infinite;
 }
