@@ -3,30 +3,37 @@ import { useState, useEffect } from 'react'
 import { ReactCountryFlag } from 'react-country-flag'
 import { LANGUAGES } from '@/constants'
 import { useTranslation } from 'react-i18next'
-import { applyStoredTheme, getTheme } from '@/lib/theme';
-
+import { getTheme } from '@/lib/theme';
 
 const LanguageSelect = () => {
-    const [selectedLanguage, setSelectedLanguage] = useState(LANGUAGES[0])
-    const [isDarkMode, setIsDarkMode] = useState(getTheme());
     const { i18n } = useTranslation();
+    const [selectedLanguage, setSelectedLanguage] = useState(LANGUAGES[0]);
+    const [setIsDarkMode] = useState(getTheme());
+
+    // Detectar idioma actual de i18n al montar el componente
+    useEffect(() => {
+        const currentLang = LANGUAGES.find(lang => lang.code === i18n.language);
+        if (currentLang) {
+            setSelectedLanguage(currentLang);
+        }
+    }, [i18n.language]);
+
+    // Escuchar cambios en el tema (modo oscuro/claro)
+    useEffect(() => {
+        const handleThemeChange = () => {
+            setIsDarkMode(getTheme());
+        };
+
+        window.addEventListener('storage', handleThemeChange);
+        return () => {
+            window.removeEventListener('storage', handleThemeChange);
+        };
+    }, [setIsDarkMode]);
 
     const onChangeLang = (selectedLang) => {
         setSelectedLanguage(selectedLang);
         i18n.changeLanguage(selectedLang.code);
     };
-
-    useEffect(() => {
-        const handleThemeChange = () => {
-          setIsDarkMode(getTheme());
-        };
-    
-        window.addEventListener('storage', handleThemeChange);
-    
-        return () => {
-          window.removeEventListener('storage', handleThemeChange);
-        };
-      }, []);
 
     return (
         <div className="relative w-fit flex justify-center items-center">
