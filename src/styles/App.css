@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+@import "primeicons/primeicons.css";
+@import "primereact/resources/primereact.min.css";
 
 * {
     transition: background-color 0.5s ease, color 0.5s ease;

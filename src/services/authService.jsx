@@ -24,6 +24,35 @@ export const login = async (email, password) => {
     }
 }
 
+export const isEmailRegistered = async (email) => {
+    try {
+        await withCSRF();
+        const { data } = await instance.get('/api/email/registered', {
+            params: { email },
+        });
+        return data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const registerUser = async (name, email, password) => {
+    try {
+        await withCSRF();
+        await instance.post('/api/register', {
+            name,
+            email,
+            password,
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true,
+            withXSRFToken: true,
+        });
+        return await login(email, password);
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const getUser = async () => {
     try {
         await withCSRF();

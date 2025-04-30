@@ -8,13 +8,13 @@ import PageLoader from './components/PageLoader.jsx'
 
 createRoot(document.getElementById('root')).render(
   <Suspense fallback={<PageLoader />}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/example" element={<Example />} />
-          <Route path="/loading" element={<PageLoader />} />
-          <Route path="*" element={<App />} />
-        </Routes>
-      </BrowserRouter>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/example" element={<Example />} />
+        <Route path="/loading" element={<PageLoader />} />
+        <Route path="*" element={<App />} />
+      </Routes>
+    </BrowserRouter>
   </Suspense>,
 )
