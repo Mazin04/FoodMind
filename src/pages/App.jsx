@@ -147,7 +147,7 @@ function App() {
       console.log(user);
     } catch (error) {
       error_message.classList.remove('hidden');
-      error_message.innerHTML = t('error_invalid_credentials');
+      error_message.innerHTML = t(error.response.data.message);
     }
   }
 
