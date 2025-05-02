@@ -5,16 +5,19 @@ import './i18n.js'
 import { BrowserRouter, Routes, Route } from 'react-router'
 import Example from './pages/Example.jsx'
 import PageLoader from './components/PageLoader.jsx'
+import { ThemeProvider } from './context/ThemeContext.jsx'
 
 createRoot(document.getElementById('root')).render(
-  <Suspense fallback={<PageLoader />}>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/example" element={<Example />} />
-        <Route path="/loading" element={<PageLoader />} />
-        <Route path="*" element={<App />} />
-      </Routes>
-    </BrowserRouter>
-  </Suspense>,
+  <ThemeProvider>
+    <Suspense fallback={<PageLoader />}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/example" element={<Example />} />
+          <Route path="/loading" element={<PageLoader />} />
+          <Route path="*" element={<App />} />
+        </Routes>
+      </BrowserRouter>
+    </Suspense>
+  </ThemeProvider>,
 )

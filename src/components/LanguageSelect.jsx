@@ -3,12 +3,10 @@ import { useState, useEffect } from 'react'
 import { ReactCountryFlag } from 'react-country-flag'
 import { LANGUAGES } from '@/constants'
 import { useTranslation } from 'react-i18next'
-import { getTheme } from '@/lib/theme';
-
+import { useTheme } from '../context/ThemeContext'
 const LanguageSelect = () => {
     const { i18n } = useTranslation();
     const [selectedLanguage, setSelectedLanguage] = useState(LANGUAGES[0]);
-    const [setIsDarkMode] = useState(getTheme());
 
     // Detectar idioma actual de i18n al montar el componente
     useEffect(() => {
@@ -17,18 +15,6 @@ const LanguageSelect = () => {
             setSelectedLanguage(currentLang);
         }
     }, [i18n.language]);
-
-    // Escuchar cambios en el tema (modo oscuro/claro)
-    useEffect(() => {
-        const handleThemeChange = () => {
-            setIsDarkMode(getTheme());
-        };
-
-        window.addEventListener('storage', handleThemeChange);
-        return () => {
-            window.removeEventListener('storage', handleThemeChange);
-        };
-    }, [setIsDarkMode]);
 
     const onChangeLang = (selectedLang) => {
         setSelectedLanguage(selectedLang);
