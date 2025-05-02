@@ -14,7 +14,7 @@ import LanguageSelect from '@/components/LanguageSelect';
 import { InputText } from 'primereact/inputtext';
 import { isEmailRegistered, registerUser, login as loginService } from '@/services/authService';
 import { SyncLoader } from 'react-spinners';
-import { isEmailValid, isPasswordValid } from '@/utils/validators'; // Importa las funciones de validación
+import { isEmailValid, isEmailEmpty, isPasswordValid, isNameEmpty, isPasswordEmpty } from '@/utils/validators'; // Importa las funciones de validación
 
 function App() {
   const { t } = useTranslation();
@@ -31,7 +31,7 @@ function App() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  var isEmailValid = false;
+  var isEmailAvailable = false;
 
   useEffect(() => {
     setRegisterPassword(true);
@@ -50,38 +50,45 @@ function App() {
 
   const doRegister = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     // Comprobar que el nombre no está vacío
-    if (name.trim() === '') {
+    if (isNameEmpty(name)) {
       setErrorMessage(t('error_empty_name'));
+      setIsLoading(false);
       return;
     }
 
     // Comprobar que el correo electrónico no está vacío
-    if (email.trim() === '') {
+    if (isEmailEmpty(email)) {
       setErrorMessage(t('error_empty_email'));
+      setIsLoading(false);
       return;
     }
 
     // Comprobar que el correo electrónico tiene un formato válido
     if (!isEmailValid(email)) {
       setErrorMessage(t('error_invalid_email'));
+      setIsLoading(false);
       return;
     }
     // Comprobar que el correo electrónico no está registrado
-    isEmailValid = await isEmailRegistered(email);
+    isEmailAvailable = await isEmailRegistered(email);
 
-    if (isEmailValid.registered && !shouldShowPassword) {
+    if (isEmailAvailable.registered && !shouldShowPassword) {
       setErrorMessage(t('error_email_registered'));
+      setIsLoading(false);
       return;
-    } else if (!isEmailValid.registered && shouldShowPassword) {
+    } else if (!isEmailAvailable.registered && shouldShowPassword) {
       // Comprobar que la contraseña no está vacía
-      if (password.trim() === '') {
+      if (isPasswordEmpty(password)) {
         setErrorMessage(t('error_empty_password'));
+        setIsLoading(false);
         return;
       }
       // Comprobar que la contraseña tiene al menos 8 caracteres y contiene al menos una letra y un número
       if (!isPasswordValid(password)) {
         setErrorMessage(t('error_invalid_password'));
+        setIsLoading(false);
         return;
       }
       // Aquí puedes realizar la lógica de registro, como enviar los datos al servidor
@@ -95,8 +102,9 @@ function App() {
         } else {
           setErrorMessage(t('error_general'));
         }
+      } finally {
+        setIsLoading(false);
       }
-      //window.location.href = '/example';
     } else {
       setRegisterPassword(true);
       setShowPassword(false);
@@ -110,15 +118,14 @@ function App() {
     setIsLoading(true);
 
     // Comprobar que el correo electrónico no está vacío
-    if (email.trim() === '') {
+    if (isEmailEmpty(email)) {
       setErrorMessage(t('error_empty_email'));
       setIsLoading(false); // Detener loader
       return;
     }
 
     // Comprobar que el correo electrónico tiene un formato válido
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
+    if (isEmailValid(email)) {
       setErrorMessage(t('error_invalid_email'));
       setIsLoading(false); // Detener loader
       return;
