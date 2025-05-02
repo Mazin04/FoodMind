@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { InputText } from 'primereact/inputtext';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,9 +19,11 @@ import {
   isNameEmpty,
   isPasswordEmpty,
 } from '@/utils/validators';
+import URLS from '../constants/urls';
 
 const AuthForm = ({ isLoginMode, isDarkMode }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const [registerPassword, setRegisterPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -36,6 +39,7 @@ const AuthForm = ({ isLoginMode, isDarkMode }) => {
     setEmail(e.target.value);
     setRegisterPassword(false);
   };
+  // TODO: Redirigir al usuario al dashboard tras iniciar sesión o registrarse
 
   const doRegister = async (e) => {
     e.preventDefault();
@@ -56,6 +60,7 @@ const AuthForm = ({ isLoginMode, isDarkMode }) => {
         const user = await registerUser(name, email, password);
         console.log(user);
         setErrorMessage('success_register');
+        navigate(URLS.HOME);
       } catch (error) {
         const code = error.response?.status;
         setErrorMessage(t(code === 400 ? 'error_invalid_credentials' : 'error_general'));
@@ -78,7 +83,7 @@ const AuthForm = ({ isLoginMode, isDarkMode }) => {
 
     try {
       const user = await loginService(email, password);
-      console.log(user);
+      navigate(URLS.HOME);
     } catch (error) {
       setErrorMessage(t(error.response?.data?.message || 'error_generic'));
     } finally {

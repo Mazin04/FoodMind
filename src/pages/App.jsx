@@ -1,24 +1,26 @@
 import { useEffect, useState } from 'react';
-import '@/styles/App.css';
+import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import "@theme-toggles/react/css/DarkInner.css";
-import { DarkInner } from '@theme-toggles/react';
-import { useTheme } from '@/context/ThemeContext';
-import { FaGoogle } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 import Typewriter from 'typewriter-effect';
-import { motion, AnimatePresence } from 'framer-motion';
+import { DarkInner } from '@theme-toggles/react';
+
+import URLS from '@/constants/urls';
+import '@/styles/App.css';
+import "@theme-toggles/react/css/DarkInner.css";
+
+import { useTheme } from '@/context/ThemeContext';
+import LanguageSelect from '@/components/LanguageSelect';
+import AuthForm from '@/components/AuthForm';
 
 import w_logo from '@/assets/images/logos/Logo_w_mode.png';
 import b_logo from '@/assets/images/logos/Logo_b_mode.png';
-import LanguageSelect from '@/components/LanguageSelect';
-import { InputText } from 'primereact/inputtext';
-import { isEmailRegistered, registerUser, login as loginService } from '@/services/authService';
-import { SyncLoader } from 'react-spinners';
-import { isEmailValid, isEmailEmpty, isPasswordValid, isNameEmpty, isPasswordEmpty } from '@/utils/validators'; // Importa las funciones de validación
-import AuthForm from '../components/AuthForm';
+
+import { getUser } from '@/services/authService';
 
 function App() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const { isDarkMode, toggleTheme } = useTheme();
   const [isLoginMode, setIsLoginMode] = useState(true);
@@ -26,6 +28,22 @@ function App() {
   const changeSignMode = () => {
     setIsLoginMode((prevMode) => !prevMode);
   };
+
+  // Si hay un usuario logueado, redirigir a la página de dashboard
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const user = await getUser();
+        if (user !== null) {
+          // TODO: Cambiar la URL a la página de dashboard
+          navigate(URLS.EXAMPLE);
+        }
+      } catch (error) {
+        // Do nothing, the user is not logged in
+      }
+    };
+    fetchUser();
+  }, []);
 
   return (
     <>
@@ -130,7 +148,7 @@ function App() {
               {isLoginMode ? t('enter_to_continue') : t('enter_to_create')}
             </motion.p>
 
-            <AuthForm isLoginMode={isLoginMode} toggleMode={toggleTheme} isDarkMode={isDarkMode} />
+            <AuthForm isLoginMode={isLoginMode} isDarkMode={isDarkMode} />
           </div>
 
         </div>
