@@ -39,7 +39,6 @@ const AuthForm = ({ isLoginMode, isDarkMode }) => {
     setEmail(e.target.value);
     setRegisterPassword(false);
   };
-  // TODO: Redirigir al usuario al dashboard tras iniciar sesión o registrarse
 
   const doRegister = async (e) => {
     e.preventDefault();
@@ -58,7 +57,6 @@ const AuthForm = ({ isLoginMode, isDarkMode }) => {
 
       try {
         const user = await registerUser(name, email, password);
-        console.log(user);
         setErrorMessage('success_register');
         navigate(URLS.HOME);
       } catch (error) {

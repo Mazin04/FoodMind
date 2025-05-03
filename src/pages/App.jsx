@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import Typewriter from 'typewriter-effect';
 import { DarkInner } from '@theme-toggles/react';
 
-import URLS from '@/constants/urls';
 import '@/styles/App.css';
 import "@theme-toggles/react/css/DarkInner.css";
 
@@ -16,11 +15,8 @@ import AuthForm from '@/components/AuthForm';
 import w_logo from '@/assets/images/logos/Logo_w_mode.png';
 import b_logo from '@/assets/images/logos/Logo_b_mode.png';
 
-import { getUser } from '@/services/authService';
-
 function App() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const { isDarkMode, toggleTheme } = useTheme();
   const [isLoginMode, setIsLoginMode] = useState(true);
@@ -28,22 +24,6 @@ function App() {
   const changeSignMode = () => {
     setIsLoginMode((prevMode) => !prevMode);
   };
-
-  // Si hay un usuario logueado, redirigir a la página de dashboard
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const user = await getUser();
-        if (user !== null) {
-          // TODO: Cambiar la URL a la página de dashboard
-          navigate(URLS.EXAMPLE);
-        }
-      } catch (error) {
-        // Do nothing, the user is not logged in
-      }
-    };
-    fetchUser();
-  }, []);
 
   return (
     <>
