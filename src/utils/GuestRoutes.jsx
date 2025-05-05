@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Outlet, Navigate } from "react-router";
 import { getUser } from "@/services/authService";
 import PageLoader from "@/components/PageLoader";
+import URLS from "@/constants/urls";
 
 const GuestRoutes = () => {
     const [user, setUser] = useState(null);
@@ -23,7 +24,7 @@ const GuestRoutes = () => {
 
     if (loading) return <PageLoader/>;
 
-    return !user ? <Outlet /> : <Navigate to="/home" />;
+    return !user ? <Outlet /> : <Navigate to={URLS.HOME} />;
 }
 
 export default GuestRoutes;

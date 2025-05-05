@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { InputText } from 'primereact/inputtext';
 import { useTranslation } from 'react-i18next';
@@ -19,7 +19,7 @@ import {
   isNameEmpty,
   isPasswordEmpty,
 } from '@/utils/validators';
-import URLS from '../constants/urls';
+import URLS from '@/constants/urls';
 
 const AuthForm = ({ isLoginMode, isDarkMode }) => {
   const { t } = useTranslation();
@@ -35,6 +35,10 @@ const AuthForm = ({ isLoginMode, isDarkMode }) => {
   const [password, setPassword] = useState('');
   const shouldShowPassword = isLoginMode || (registerPassword && !isLoginMode);
 
+  useEffect(() => {
+    setErrorMessage('');
+  }, [isLoginMode])
+
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
     setRegisterPassword(false);
@@ -44,32 +48,57 @@ const AuthForm = ({ isLoginMode, isDarkMode }) => {
     e.preventDefault();
     setIsLoading(true);
 
-    if (isNameEmpty(name)) return setErr(t('error_empty_name'));
-    if (isEmailEmpty(email)) return setErr(t('error_empty_email'));
-    if (!isEmailValid(email)) return setErr(t('error_invalid_email'));
+    if (isNameEmpty(name)) {
+      setErr(t('error_empty_name'));
+      setIsLoading(false);
+      return;
+    }
 
-    const isEmailAvailable = await isEmailRegistered(email);
-    if (isEmailAvailable.registered && !shouldShowPassword) {
-      return setErr(t('error_email_registered'));
-    } else if (!isEmailAvailable.registered && shouldShowPassword) {
-      if (isPasswordEmpty(password)) return setErr(t('error_empty_password'));
-      if (!isPasswordValid(password)) return setErr(t('error_invalid_password'));
+    if (isEmailEmpty(email)) {
+      setErr(t('error_empty_email'));
+      setIsLoading(false);
+      return;
+    }
 
-      try {
+    if (!isEmailValid(email)) {
+      setErr(t('error_invalid_email'));
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const isEmailAvailable = await isEmailRegistered(email);
+
+      if (isEmailAvailable.registered && !shouldShowPassword) {
+        setErr(t('error_email_registered'));
+        return;
+      }
+
+      if (!isEmailAvailable.registered && shouldShowPassword) {
+        if (isPasswordEmpty(password)) {
+          setErr(t('error_empty_password'));
+          return;
+        }
+        if (!isPasswordValid(password)) {
+          setErr(t('error_invalid_password'));
+          return;
+        }
+
         const user = await registerUser(name, email, password);
         setErrorMessage('success_register');
         navigate(URLS.HOME);
-      } catch (error) {
-        const code = error.response?.status;
-        setErrorMessage(t(code === 400 ? 'error_invalid_credentials' : 'error_general'));
-      } finally {
-        setIsLoading(false);
+      } else {
+        setRegisterPassword(true);
+        setShowPassword(false);
       }
-    } else {
-      setRegisterPassword(true);
-      setShowPassword(false);
+    } catch (error) {
+      const code = error.response?.status;
+      setErrorMessage(t(code === 400 ? 'error_invalid_credentials' : 'error_general'));
+    } finally {
+      setIsLoading(false);
     }
   };
+
 
   const doLogin = async (e) => {
     e.preventDefault();
@@ -94,6 +123,8 @@ const AuthForm = ({ isLoginMode, isDarkMode }) => {
     setIsLoading(false);
   };
 
+  // TODO: Register doesn't work
+  // TODO: Enter key
   return (
     <>
       <AnimatePresence mode="wait">
@@ -112,7 +143,7 @@ const AuthForm = ({ isLoginMode, isDarkMode }) => {
               data-testid="loader"
             />
           ) : (
-            <form className='flex flex-col justify-center items-center w-full' onSubmit={(e) => {e.preventDefault(); isLoginMode ? doLogin(e) : doRegister(e); }}>
+            <form className='flex flex-col justify-center items-center w-full' onSubmit={(e) => { e.preventDefault(); isLoginMode ? doLogin(e) : doRegister(e); }}>
               <AnimatePresence mode="wait">
                 {!isLoginMode && (
                   <motion.div
@@ -122,10 +153,11 @@ const AuthForm = ({ isLoginMode, isDarkMode }) => {
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <span className='pl-1 pr-3 border-neutral-900 dark:border-white'>
+                    <span className='pl-1 pr-3 border-neutral-900 dark:border-white relative'>
                       <i className="pi pi-user" />
+                      <span className='text-red-600 absolute bottom-1'>*</span>
                     </span>
-                    <InputText type='text' placeholder={t('input_name')} id='input_name' className='focus:outline-none text-sm md:text-base' keyfilter={"alpha"} onInput={(e) => setName(e.target.value)} />
+                    <InputText type='text' required placeholder={t('input_name')} id='input_name' value={name} className='focus:outline-none text-sm md:text-base' onInput={(e) => setName(e.target.value)} />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -137,10 +169,11 @@ const AuthForm = ({ isLoginMode, isDarkMode }) => {
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.3 }}
               >
-                <span className='pl-1 pr-3 border-neutral-900 dark:border-white'>
+                <span className='pl-1 pr-3 border-neutral-900 relative dark:border-white'>
                   <i className="pi pi-envelope" />
+                  <span className='text-red-600 absolute bottom-1'>*</span>
                 </span>
-                <InputText type='email' placeholder={t('input_email')} id='input_email' className='focus:outline-none flex-grow text-sm md:text-base' keyfilter={"email"} onInput={(e) => handleEmailChange(e)} />
+                <InputText type='email' placeholder={t('input_email')} id='input_email' value={email} className='focus:outline-none flex-grow text-sm md:text-base' keyfilter={"email"} onChange={handleEmailChange} />
               </motion.div>
 
               <AnimatePresence mode="wait">
@@ -152,19 +185,21 @@ const AuthForm = ({ isLoginMode, isDarkMode }) => {
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <span className='pl-1 pr-3 border-neutral-900 dark:border-white'>
+                    <span className='pl-1 pr-3 border-neutral-900 dark:border-white relative'>
                       <i className="pi pi-lock" />
+                      <span className='text-red-600 absolute bottom-1'>*</span>
                     </span>
                     <InputText
                       type={showPassword ? 'text' : 'password'}
                       placeholder={t('input_password')}
                       id='input_password'
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       className='focus:outline-none flex-grow bg-transparent text-sm md:text-base'
-                      onInput={(e) => setPassword(e.target.value)}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           e.preventDefault();
-                          isLoginMode ? (e) => { doLogin(e) /* Handle login */ } : (e) => { doRegister(e); /* Handle register */ };
+                          isLoginMode ? doLogin(e) : doRegister(e);
                         }
                       }}
                     />

@@ -1,6 +1,6 @@
 import { useEffect, useState, Suspense } from 'react';
-import '../styles/App.css';
-import { login as loginService, getUser, logout } from '../services/authService';
+import '@/styles/App.css';
+import { login as loginService, getUser, logout } from '@/services/authService';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 

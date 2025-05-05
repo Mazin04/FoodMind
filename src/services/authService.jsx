@@ -63,6 +63,16 @@ export const getUser = async () => {
     }
 }
 
+export const getAvatar = async () => {
+    try {
+        await withCSRF();
+        const { data } = await instance.get('/api/user/avatar');
+        return data;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const logout = async () => {
     try {
         await withCSRF();

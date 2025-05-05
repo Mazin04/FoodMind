@@ -1,5 +1,5 @@
-import w_logo from '../assets/images/logos/Logo_w_mode.png';
-import b_logo from '../assets/images/logos/Logo_b_mode.png';
+import w_logo from '@/assets/images/logos/Logo_w_mode.png';
+import b_logo from '@/assets/images/logos/Logo_b_mode.png';
 import { useTheme } from '@/context/ThemeContext';
 
 function PageLoader() {

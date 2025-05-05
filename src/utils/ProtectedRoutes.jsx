@@ -2,7 +2,7 @@ import { Outlet, Navigate } from "react-router";
 import { getUser } from "@/services/authService";
 
 import { useState, useEffect } from "react";
-import PageLoader from "../components/PageLoader";
+import PageLoader from "@/components/PageLoader";
 
 const ProtectedRoutes = () => {
     const [user, setUser] = useState(null);

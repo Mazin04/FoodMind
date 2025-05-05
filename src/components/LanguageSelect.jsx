@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { ReactCountryFlag } from 'react-country-flag'
 import { LANGUAGES } from '@/constants'
 import { useTranslation } from 'react-i18next'
-import { useTheme } from '../context/ThemeContext'
+
 const LanguageSelect = () => {
     const { i18n } = useTranslation();
     const [selectedLanguage, setSelectedLanguage] = useState(LANGUAGES[0]);
