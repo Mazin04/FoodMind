@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { useTheme } from '@/context/ThemeContext';
-import { House, DotsThree, User, Gear } from '@phosphor-icons/react';
-import { getAvatar, getUser } from '@/services/authService';
+import { House, DotsThree, User, Gear, Basket } from '@phosphor-icons/react';
+import { getUser } from '@/services/authService';
 import { CircleLoader } from "react-spinners";
 
 import w_logo from '@/assets/images/logos/Logo_w_mode.png';
@@ -23,15 +23,12 @@ function Navbar() {
     useEffect(() => {
         async function fetchData() {
             try {
-                const [user, avatarResponse] = await Promise.all([
-                    getUser(),
-                    getAvatar()
-                ]);
+                const user = await getUser();
 
                 const placeholderUrl = `https://avatar.iran.liara.run/username?username=${user.name}`;
                 setUserName(user.name);
                 setPlaceholder(placeholderUrl);
-                setAvatar(avatarResponse?.avatar || null);
+                setAvatar(user.avatar || placeholderUrl);
             } catch (error) {
                 console.error("Error fetching user data:", error);
             }
@@ -45,21 +42,21 @@ function Navbar() {
     }
 
     return (
-        <div className="w-full h-full min-w-[90px] p-2 flex flex-col items-center justify-between xl:items-end space-y-4 text-md text-neutral-900 dark:text-white bg-stone-100 dark:bg-neutral-900 border-r-1 border-neutral-700">
+        <div className="w-full h-full min-w-[60px] sm:min-w-[90px] py-4 sm:p-2 flex flex-col items-center justify-between xl:items-end space-y-4 text-md text-neutral-900 dark:text-white bg-stone-100 dark:bg-neutral-900 border-r-1 border-neutral-700">
             <div>
                 {/* Logo and menu for small screens */}
-                <div className='flex justify-end mb-4 cursor-pointer' onClick={() => redirectTo('HOME')}>
+                <div className='flex justify-center xl:justify-end mb-4 cursor-pointer' onClick={() => redirectTo('HOME')}>
                     <img
                         src={isDarkMode ? b_logo : w_logo}
                         alt="Logo"
-                        className='w-[80px] h-auto'
+                        className='w-[50px] xl:w-[70px] h-auto'
                     />
                 </div>
                 {/* Navbar items */}
-                <div className='flex flex-col items-end justify-center space-y-4'>
+                <div className='flex flex-col items-center xl:items-end justify-center space-y-4'>
                     {/* Home button */}
                     <button
-                        className={`dark:bg-neutral-900 dark:hover:bg-neutral-800 hover:bg-stone-300 p-5 rounded-full flex justify-center items-center cursor-pointer ${location.pathname === URLS.HOME ? "font-bold" : ""}`}
+                        className={`dark:bg-neutral-900 dark:hover:bg-neutral-800 hover:bg-stone-300 py-2 sm:p-5 rounded-full flex justify-center items-center cursor-pointer ${location.pathname === URLS.HOME ? "font-bold" : ""}`}
                         id='home'
                         onClick={() => redirectTo('HOME')}>
                         <p className='hidden xl:block mr-4'>{t('nav_home')}</p>
@@ -71,7 +68,7 @@ function Navbar() {
                     </button>
                     {/* Profile button */}
                     <button
-                        className={`dark:bg-neutral-900 dark:hover:bg-neutral-800 hover:bg-stone-300 p-5 rounded-full flex justify-center items-center cursor-pointer ${location.pathname === URLS.PROFILE ? "font-bold" : ""}`}
+                        className={`dark:bg-neutral-900 dark:hover:bg-neutral-800 hover:bg-stone-300 py-2 sm:p-5 rounded-full flex justify-center items-center cursor-pointer ${location.pathname === URLS.PROFILE ? "font-bold" : ""}`}
                         id='profile'
                         onClick={() => redirectTo('PROFILE')}>
                         <p className='hidden xl:block mr-4'>{t('nav_profile')}</p>
@@ -81,9 +78,21 @@ function Navbar() {
                             weight={location.pathname === URLS.PROFILE ? "fill" : "bold"}
                         />
                     </button>
+                    {/* Pantry button */}
+                    <button
+                        className={`dark:bg-neutral-900 dark:hover:bg-neutral-800 hover:bg-stone-300 py-2 sm:p-5 rounded-full flex justify-center items-center cursor-pointer ${location.pathname === URLS.PANTRY ? "font-bold" : ""}`}
+                        id='profile'
+                        onClick={() => redirectTo('PANTRY')}>
+                        <p className='hidden xl:block mr-4'>{t('nav_pantry')}</p>
+                        <Basket
+                            size={25}
+                            color={isDarkMode ? "#fff" : "#000"}
+                            weight={location.pathname === URLS.PANTRY ? "fill" : "bold"}
+                        />
+                    </button>
                     {/* Settings button */}
                     <button
-                        className={`dark:bg-neutral-900 dark:hover:bg-neutral-800 hover:bg-stone-300 p-5 rounded-full flex justify-center items-center cursor-pointer ${location.pathname === URLS.SETTINGS ? "font-bold" : ""}`}
+                        className={`dark:bg-neutral-900 dark:hover:bg-neutral-800 hover:bg-stone-300 py-2 sm:p-5 rounded-full flex justify-center items-center cursor-pointer ${location.pathname === URLS.SETTINGS ? "font-bold" : ""}`}
                         id='settings'
                         onClick={() => redirectTo('SETTINGS')}
                     >
@@ -99,7 +108,7 @@ function Navbar() {
             {/* Avatar */}
             <div className='mb-2'>
                 <div
-                    className="flex items-center justify-center xl:justify-start gap-4 px-5 py-4 rounded-full bg-stone-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 cursor-pointer w-full xl:w-auto"
+                    className="flex items-center justify-center xl:justify-start gap-4 sm:px-5 py-4 rounded-full bg-stone-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 hover:bg-stone-300 cursor-pointer w-full xl:w-auto"
                     onClick={() => redirectTo('PROFILE')}
                 >
                     <div className="flex-shrink-0">

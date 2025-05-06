@@ -123,7 +123,6 @@ const AuthForm = ({ isLoginMode, isDarkMode }) => {
     setIsLoading(false);
   };
 
-  // TODO: Enter key
   return (
     <>
       <AnimatePresence mode="wait">

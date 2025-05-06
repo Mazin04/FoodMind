@@ -8,6 +8,7 @@ import Example from '@/pages/Example.jsx'
 import Home from '@/pages/Home.jsx'
 import Profile from '@/pages/Profile'
 import Settings from '@/pages/Settings'
+import Pantry from './pages/Pantry'
 
 import GuestRoutes from '@/utils/GuestRoutes'
 import ProtectedRoutes from '@/utils/ProtectedRoutes.jsx'
@@ -36,6 +37,7 @@ createRoot(document.getElementById('root')).render(
               <Route path={URLS.HOME} element={<Home />} />
               <Route path={URLS.PROFILE} element={<Profile />} />
               <Route path={URLS.SETTINGS} element={<Settings />} />
+              <Route path={URLS.PANTRY} element={<Pantry/>} />
             </Route>
 
             <Route path={URLS.EXAMPLE} element={<Example />} />
