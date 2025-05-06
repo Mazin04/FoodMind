@@ -2,9 +2,12 @@ import { createRoot } from 'react-dom/client'
 import { Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router'
 
+import HomeLayout from '@/layout/HomeLayout.jsx'
 import App from '@/pages/App.jsx'
 import Example from '@/pages/Example.jsx'
 import Home from '@/pages/Home.jsx'
+import Profile from '@/pages/Profile'
+import Settings from '@/pages/Settings'
 
 import GuestRoutes from '@/utils/GuestRoutes'
 import ProtectedRoutes from '@/utils/ProtectedRoutes.jsx'
@@ -14,6 +17,7 @@ import { ThemeProvider } from '@/context/ThemeContext.jsx'
 
 import URLS from '@/constants/urls.js'
 import '@/i18n.js'
+
 
 createRoot(document.getElementById('root')).render(
   <ThemeProvider>
@@ -28,12 +32,14 @@ createRoot(document.getElementById('root')).render(
 
           {/* Rutas protegidas */}
           <Route element={<ProtectedRoutes />}>
-            <Route path={URLS.HOME} element={<Home />} />
-            <Route path={URLS.PROFILE} element={<Home />} />
-            <Route path={URLS.SETTINGS} element={<Home />} />
+            <Route element={<HomeLayout />}>
+              <Route path={URLS.HOME} element={<Home />} />
+              <Route path={URLS.PROFILE} element={<Profile />} />
+              <Route path={URLS.SETTINGS} element={<Settings />} />
+            </Route>
+
             <Route path={URLS.EXAMPLE} element={<Example />} />
           </Route>
-
           <Route path="*" element={<Navigate to={URLS.MAIN} replace />} />
         </Routes>
       </BrowserRouter>

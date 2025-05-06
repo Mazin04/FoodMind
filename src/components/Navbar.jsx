@@ -22,15 +22,19 @@ function Navbar() {
 
     useEffect(() => {
         async function fetchData() {
-            const [user, avatarResponse] = await Promise.all([
-                getUser(),
-                getAvatar()
-            ]);
+            try {
+                const [user, avatarResponse] = await Promise.all([
+                    getUser(),
+                    getAvatar()
+                ]);
 
-            const placeholderUrl = `https://avatar.iran.liara.run/username?username=${user.name}`;
-            setUserName(user.name);
-            setPlaceholder(placeholderUrl);
-            setAvatar(avatarResponse?.avatar || null);
+                const placeholderUrl = `https://avatar.iran.liara.run/username?username=${user.name}`;
+                setUserName(user.name);
+                setPlaceholder(placeholderUrl);
+                setAvatar(avatarResponse?.avatar || null);
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
         }
 
         fetchData();
@@ -55,7 +59,7 @@ function Navbar() {
                 <div className='flex flex-col items-end justify-center space-y-4'>
                     {/* Home button */}
                     <button
-                        className={`dark:bg-neutral-900 hover:bg-neutral-800 p-5 rounded-full flex justify-center items-center cursor-pointer ${location.pathname === URLS.HOME ? "font-bold" : ""}`}
+                        className={`dark:bg-neutral-900 dark:hover:bg-neutral-800 hover:bg-stone-300 p-5 rounded-full flex justify-center items-center cursor-pointer ${location.pathname === URLS.HOME ? "font-bold" : ""}`}
                         id='home'
                         onClick={() => redirectTo('HOME')}>
                         <p className='hidden xl:block mr-4'>{t('nav_home')}</p>
@@ -67,7 +71,7 @@ function Navbar() {
                     </button>
                     {/* Profile button */}
                     <button
-                        className={`dark:bg-neutral-900 hover:bg-neutral-800 p-5 rounded-full flex justify-center items-center cursor-pointer ${location.pathname === URLS.PROFILE ? "font-bold" : ""}`}
+                        className={`dark:bg-neutral-900 dark:hover:bg-neutral-800 hover:bg-stone-300 p-5 rounded-full flex justify-center items-center cursor-pointer ${location.pathname === URLS.PROFILE ? "font-bold" : ""}`}
                         id='profile'
                         onClick={() => redirectTo('PROFILE')}>
                         <p className='hidden xl:block mr-4'>{t('nav_profile')}</p>
@@ -79,7 +83,7 @@ function Navbar() {
                     </button>
                     {/* Settings button */}
                     <button
-                        className={`dark:bg-neutral-900 hover:bg-neutral-800 p-5 rounded-full flex justify-center items-center cursor-pointer ${location.pathname === URLS.SETTINGS ? "font-bold" : ""}`}
+                        className={`dark:bg-neutral-900 dark:hover:bg-neutral-800 hover:bg-stone-300 p-5 rounded-full flex justify-center items-center cursor-pointer ${location.pathname === URLS.SETTINGS ? "font-bold" : ""}`}
                         id='settings'
                         onClick={() => redirectTo('SETTINGS')}
                     >
@@ -95,7 +99,7 @@ function Navbar() {
             {/* Avatar */}
             <div className='mb-2'>
                 <div
-                    className="flex items-center justify-center xl:justify-start gap-4 px-5 py-4 rounded-full bg-stone-100 dark:bg-neutral-900 hover:bg-neutral-800 cursor-pointer w-full xl:w-auto"
+                    className="flex items-center justify-center xl:justify-start gap-4 px-5 py-4 rounded-full bg-stone-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 cursor-pointer w-full xl:w-auto"
                     onClick={() => redirectTo('PROFILE')}
                 >
                     <div className="flex-shrink-0">

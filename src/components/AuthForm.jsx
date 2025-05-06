@@ -123,7 +123,6 @@ const AuthForm = ({ isLoginMode, isDarkMode }) => {
     setIsLoading(false);
   };
 
-  // TODO: Register doesn't work
   // TODO: Enter key
   return (
     <>
