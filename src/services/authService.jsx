@@ -100,3 +100,18 @@ export const logout = async () => {
         throw error;
     }
 }
+
+export const userRecipes = async () => {
+    try {
+        await withCSRF();
+        const { data } = await instance.post('/api/user/yourRecipes');
+        return data;
+    } catch (error) {
+        if (error.response && error.response.status === 401) {
+            notifyService.error("Session expired, please login again", { duration: 2000 });
+        } else {
+            notifyService.error("Can't connect with the server", { duration: 2000 });
+        }
+        throw error;
+    }
+}
