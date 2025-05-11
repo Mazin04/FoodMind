@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getUser, userRecipes } from "@/services/authService";
 import { useTranslation } from "react-i18next";
 import useScrollHorizontal from "@/lib/scrollHorizontal";
+import RecipeCard from "@/components/RecipeCard";
 
 import bg from "@/assets/images/bg-2.png";
 import PageLoader from "@/components/PageLoader.jsx";
@@ -20,6 +21,7 @@ const Profile = () => {
     const [userCreatedRecipes, setUserCreatedRecipes] = useState([]);
 
     useEffect(() => {
+
         async function fetchData() {
             try {
                 const user = await getUser();
@@ -27,6 +29,7 @@ const Profile = () => {
                 const avatarUrl = user.avatar && user.avatar.trim() !== "" ? user.avatar : null;
 
                 setUserName(user.name);
+                document.title = "Foodmind - " + user.name;
                 const options = { day: "2-digit", month: "short", year: "numeric" };
                 const formattedDate = new Date(user.created_at).toLocaleString("es-ES", options).replace(",", "");
                 setDate(formattedDate);
@@ -55,7 +58,7 @@ const Profile = () => {
             ) : (
                 <div className="h-full w-full flex flex-col items-center justify-start text-neutral-900 dark:text-white">
                     <div
-                        className="relative h-52 sm:h-72 md:h-84 w-full border-b-1 border-neutral-700 dark:border-neutral-500"
+                        className="relative min-h-52 sm:h-72 md:h-84 w-full border-b-1 border-neutral-700 dark:border-neutral-500"
                         style={{
                             backgroundImage: `url(${bg})`,
                             backgroundSize: "cover",
@@ -70,7 +73,7 @@ const Profile = () => {
                                 <img
                                     src={finalAvatar}
                                     alt="Profile"
-                                    className="w-full h-full rounded-full object-cover transition-opacity duration-500 opacity-0"
+                                    className="w-full h-full rounded-full object-cover transition-opacity duration-500 opacity-0 not-draggable"
                                     onLoad={(e) => e.currentTarget.classList.remove("opacity-0")}
                                     onError={(e) => {
                                         if (e.target.src !== placeholder) {
@@ -91,29 +94,21 @@ const Profile = () => {
                     <div className="flex flex-col items-start justify-center mt-8 md:mt-10 xl:mt-12 w-full">
                         <div className="flex flex-row items-start justify-start md:justify-center w-full px-5 space-x-4 overflow-auto no-scrollbar" ref={scrollRef}>
                             <h1 className="text-lg md:text-xl font-bold text-center border-b-2 border-blue-500">{t("profile.myrecipes")}</h1>
-                            <h1 className="text-lg md:text-xl font-bold text-center border-b-2 border-blue-500">{t("profile.myrecipes")}</h1>
                             <h1 className="text-lg md:text-xl font-bold text-center border-b-2 border-blue-500">{t("profile.allrecipes")}</h1>
                         </div>
                         <hr className="w-full border-neutral-700 dark:border-neutral-500 mt-1.5" />
                     </div>
                     {userCreatedRecipes.length > 0 ? (
                         <div
-                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 md:mt-10 xl:mt-12 w-full px-5"
+                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full p-5 overflow-auto no-scrollbar"
                         >
                             {userCreatedRecipes.map((recipe) => (
-                                <div
-                                    key={recipe.id}
-                                    className="h-32 bg-gray-200 dark:bg-neutral-800 rounded-lg shadow-md flex flex-col items-center justify-center"
-                                >
-                                    <p className="text-lg font-bold">{recipe.name}</p>
-                                    <p className="text-sm text-gray-500">{recipe.description}</p>
-                                    <p className="text-sm text-gray-500">{recipe.ingredients_match}</p>
-                                </div>
+                                <RecipeCard recipe={recipe} key={recipe.id} />
                             ))}
                         </div>
 
                     ) : (
-                        <div className=" h-max flex flex-col items-center justify-center mt-8 md:mt-10 xl:mt-12 w-full px-5 space-x-4 overflow-auto no-scrollbar" ref={scrollRef}>
+                        <div className=" h-max flex flex-col items-center justify-center mt-4 md:mt-6 xl:mt-8 w-full px-5 space-x-4 overflow-auto no-scrollbar" ref={scrollRef}>
                             <p className="text-lg font-bold">No se han encontrado recetas</p>
                             <p className="text-sm text-gray-500">Crea tu primera receta para empezar</p>
                             {/* <p className="text-lg font-bold">{t("profile.norecipes")}</p> */}

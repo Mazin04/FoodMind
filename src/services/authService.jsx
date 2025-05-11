@@ -103,8 +103,14 @@ export const logout = async () => {
 
 export const userRecipes = async () => {
     try {
+        const lang = localStorage.getItem('i18nextLng') || 'es';
         await withCSRF();
-        const { data } = await instance.post('/api/user/yourRecipes');
+        const { data } = await instance.post('/api/user/yourRecipes', {
+            withCredentials: true,
+            withXSRFToken: true,
+            headers: { 'Content-Type': 'application/json' },
+            lang,
+        });
         return data;
     } catch (error) {
         if (error.response && error.response.status === 401) {
