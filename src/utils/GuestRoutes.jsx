@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet, Navigate } from "react-router";
+import { Outlet, Navigate, useLocation } from "react-router";
 import { getUser } from "@/services/authService";
 import PageLoader from "@/components/PageLoader";
 import URLS from "@/constants/urls";
@@ -7,11 +7,13 @@ import URLS from "@/constants/urls";
 const GuestRoutes = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const location = useLocation();
 
     useEffect(() => {
         const fetchUser = async () => {
+            const isMain = location.pathname === URLS.MAIN;
             try {
-                const fetchedUser = await getUser();
+                const fetchedUser = await getUser(isMain);
                 setUser(fetchedUser);
             } catch (error) {
                 // Do nothing, the user is not logged in

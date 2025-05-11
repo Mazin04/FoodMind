@@ -35,7 +35,7 @@ const RecipeCard = ({ recipe }) => {
             case "MISSING":
                 return {
                     icon: "❌",
-                    tooltipLabel: lang === 'es' ? "No tiene todos los ingredientes." : "Does not have all the ingredients.",
+                    tooltipLabel: lang === 'es' ? "No tiene todos los ingredientes." : "Doesn't have all the ingredients.",
                 };
             case "UNIDADES DISTINTAS":
             case "DIFFERENT UNITS":
@@ -47,7 +47,7 @@ const RecipeCard = ({ recipe }) => {
             case "NOT ENOUGH":
                 return {
                     icon: "❗",
-                    tooltipLabel: lang === 'es' ? "No tiene suficientes ingredientes." : "Does not have enough ingredients.",
+                    tooltipLabel: lang === 'es' ? "No tiene suficientes ingredientes." : "Doesn't have enough ingredients.",
                 };
             case "PUEDE HACERLO":
             case "CAN MAKE":

@@ -76,18 +76,20 @@ export const registerUser = async (name, email, password) => {
     }
 }
 
-export const getUser = async () => {
+export const getUser = async (isMain) => {
     try {
         await withCSRF();
         const { data } = await instance.get('/api/user');
         return data;
     } catch (error) {
-        if (error.response && error.response.status === 401) {
-            notifyService.error("Session expired, please login again", { duration: 2000 });
-        } else {
-            notifyService.error("Can't connect with the server", { duration: 2000 });
+        if (!isMain) {
+            if (error.response && error.response.status === 401) {
+                notifyService.error("Session expired, please login again", { duration: 2000 });
+            } else {
+                notifyService.error("Can't connect with the server", { duration: 2000 });
+            }
+            throw error;
         }
-        throw error;
     }
 }
 
@@ -106,6 +108,27 @@ export const userRecipes = async () => {
         const lang = localStorage.getItem('i18nextLng') || 'es';
         await withCSRF();
         const { data } = await instance.post('/api/user/yourRecipes', {
+            withCredentials: true,
+            withXSRFToken: true,
+            headers: { 'Content-Type': 'application/json' },
+            lang,
+        });
+        return data;
+    } catch (error) {
+        if (error.response && error.response.status === 401) {
+            notifyService.error("Session expired, please login again", { duration: 2000 });
+        } else {
+            notifyService.error("Can't connect with the server", { duration: 2000 });
+        }
+        throw error;
+    }
+}
+
+export const userFavorites = async () => {
+    try {
+        const lang = localStorage.getItem('i18nextLng') || 'es';
+        await withCSRF();
+        const { data } = await instance.post('/api/user/favourites', {
             withCredentials: true,
             withXSRFToken: true,
             headers: { 'Content-Type': 'application/json' },

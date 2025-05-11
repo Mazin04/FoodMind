@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { getUser, userRecipes } from "@/services/authService";
+import { getUser, userRecipes, userFavorites as getUserFavorites } from "@/services/authService";
 import { useTranslation } from "react-i18next";
 import useScrollHorizontal from "@/lib/scrollHorizontal";
 import RecipeCard from "@/components/RecipeCard";
 
 import bg from "@/assets/images/bg-2.png";
-import PageLoader from "@/components/PageLoader.jsx";
+import ContentLoader from "@/components/ContentLoader.jsx";
 
 const Profile = () => {
     const { t } = useTranslation();
@@ -16,9 +16,17 @@ const Profile = () => {
     const [date, setDate] = useState("");
     const [placeholder, setPlaceholder] = useState(null);
     const [finalAvatar, setFinalAvatar] = useState(null);
+    const [currentMethodUserCreated, setCurrentMethodUserCreated] = useState(true);
     const [loading, setLoading] = useState(true);
+    const [isSwitchingRecipes, setIsSwitchingRecipes] = useState(false);
+
 
     const [userCreatedRecipes, setUserCreatedRecipes] = useState([]);
+    const [userFavorites, setUserFavorites] = useState([]);
+
+    const displayedRecipes = Array.isArray(currentMethodUserCreated ? userCreatedRecipes : userFavorites)
+        ? (currentMethodUserCreated ? userCreatedRecipes : userFavorites)
+        : [];
 
     useEffect(() => {
 
@@ -39,7 +47,7 @@ const Profile = () => {
 
                 const recipes = await userRecipes();
                 setUserCreatedRecipes(recipes);
-                console.log(recipes);
+                setCurrentMethodUserCreated(true);
             } catch (error) {
                 console.error("Error fetching user data:", error);
             } finally {
@@ -50,11 +58,44 @@ const Profile = () => {
         fetchData();
     }, []);
 
+    const fetchUserCreatedRecipes = async () => {
+        setIsSwitchingRecipes(true);
+        try {
+            const recipes = await userRecipes();
+            setUserCreatedRecipes(recipes);
+        } catch (error) {
+            console.error("Error fetching user created recipes:", error);
+        } finally {
+            setIsSwitchingRecipes(false);
+        }
+    };
+
+    const fetchUserFavorites = async () => {
+        setIsSwitchingRecipes(true);
+        try {
+            const favorites = await getUserFavorites();
+            setUserFavorites(favorites);
+        } catch (error) {
+            console.error("Error fetching user favorites:", error);
+        } finally {
+            setIsSwitchingRecipes(false);
+        }
+    };
+
+    const handleShowMyRecipes = async () => {
+        setCurrentMethodUserCreated(true);
+        await fetchUserCreatedRecipes();
+    };
+
+    const handleShowFavorites = async () => {
+        setCurrentMethodUserCreated(false);
+        await fetchUserFavorites();
+    };
 
     return (
         <>
             {loading ? (
-                <PageLoader />
+                <ContentLoader />
             ) : (
                 <div className="h-full w-full flex flex-col items-center justify-start text-neutral-900 dark:text-white">
                     <div
@@ -93,28 +134,49 @@ const Profile = () => {
                     </div>
                     <div className="flex flex-col items-start justify-center mt-8 md:mt-10 xl:mt-12 w-full">
                         <div className="flex flex-row items-start justify-start md:justify-center w-full px-5 space-x-4 overflow-auto no-scrollbar" ref={scrollRef}>
-                            <h1 className="text-lg md:text-xl font-bold text-center border-b-2 border-blue-500">{t("profile.myrecipes")}</h1>
-                            <h1 className="text-lg md:text-xl font-bold text-center border-b-2 border-blue-500">{t("profile.allrecipes")}</h1>
+                            <h1
+                                className={`text-lg md:text-xl font-bold text-center cursor-pointer ${currentMethodUserCreated ? "border-b-2 border-blue-500" : "border-b-2 border-transparent"
+                                    }`}
+                                onClick={handleShowMyRecipes}
+                            >
+                                {t("profile.myrecipes")}
+                            </h1>
+                            <h1
+                                className={`text-lg md:text-xl font-bold text-center cursor-pointer ${!currentMethodUserCreated ? "border-b-2 border-blue-500" : "border-b-2 border-transparent"
+                                    }`}
+                                onClick={handleShowFavorites}
+                            >
+                                {t("profile.favoriterecipes")}
+                            </h1>
                         </div>
                         <hr className="w-full border-neutral-700 dark:border-neutral-500 mt-1.5" />
                     </div>
-                    {userCreatedRecipes.length > 0 ? (
-                        <div
-                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full p-5 overflow-auto no-scrollbar"
-                        >
-                            {userCreatedRecipes.map((recipe) => (
+                    {isSwitchingRecipes ? (
+                        <div className="w-full h-124">
+                            <ContentLoader />
+                        </div>
+                    ) : displayedRecipes.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full p-5 overflow-auto no-scrollbar">
+                            {displayedRecipes.map((recipe) => (
                                 <RecipeCard recipe={recipe} key={recipe.id} />
                             ))}
                         </div>
-
                     ) : (
-                        <div className=" h-max flex flex-col items-center justify-center mt-4 md:mt-6 xl:mt-8 w-full px-5 space-x-4 overflow-auto no-scrollbar" ref={scrollRef}>
-                            <p className="text-lg font-bold">No se han encontrado recetas</p>
-                            <p className="text-sm text-gray-500">Crea tu primera receta para empezar</p>
-                            {/* <p className="text-lg font-bold">{t("profile.norecipes")}</p> */}
-                            {/* <p className="text-sm text-gray-500">{t("profile.norecipesdesc")}</p> */}
+                        <div className="h-max flex flex-col items-center justify-center mt-4 md:mt-6 xl:mt-8 w-full px-5 overflow-auto no-scrollbar">
+                            {currentMethodUserCreated ? (
+                                <>
+                                    <p className="text-lg font-bold">{t("profile.norecipescreated")}</p>
+                                    <p className="text-sm text-gray-500">{t("profile.norecipescreateddesc")}</p>
+                                </>
+                            ) : (
+                                <>
+                                    <p className="text-lg font-bold">{t("profile.nofavoriterecipes")}</p>
+                                    <p className="text-sm text-gray-500">{t("profile.nofavoriterecipesdesc")}</p>
+                                </>
+                            )}
                         </div>
                     )}
+
                 </div>
             )}
         </>
