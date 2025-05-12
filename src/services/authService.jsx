@@ -144,3 +144,24 @@ export const userFavorites = async () => {
         throw error;
     }
 }
+
+export const getUserPantry = async () => {
+    try {
+        const lang = localStorage.getItem('i18nextLng') || 'es';
+        await withCSRF();
+        const { data } = await instance.get('/api/ingredients', {
+            withCredentials: true,
+            withXSRFToken: true,
+            headers: { 'Content-Type': 'application/json' },
+            lang,
+        });
+        return data;
+    } catch (error) {
+        if (error.response && error.response.status === 401) {
+            notifyService.error("Session expired, please login again", { duration: 2000 });
+        } else {
+            notifyService.error("Can't connect with the server", { duration: 2000 });
+        }
+        throw error;        
+    }
+}
