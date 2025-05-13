@@ -53,7 +53,6 @@ const Settings = () => {
         fetchData();
     }, []);
 
-    // TODO: Page doesnt appear till data is fetched, add a loading spinner or something
     return (
         <>
             {loading ? (

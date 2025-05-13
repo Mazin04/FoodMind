@@ -1,3 +1,4 @@
+import { t } from "i18next";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Tooltip } from "react-tooltip";
@@ -29,36 +30,35 @@ const RecipeCard = ({ recipe }) => {
 
     // TODO: Add translations in i18next
     const getMatchIcon = () => {
-        const lang = localStorage.getItem('i18nextLng');
         switch (ingredients_match) {
             case "NO TIENE":
             case "MISSING":
                 return {
                     icon: "❌",
-                    tooltipLabel: lang === 'es' ? "No tiene todos los ingredientes." : "Doesn't have all the ingredients.",
+                    tooltipLabel: t('recipe_donthave'),
                 };
             case "UNIDADES DISTINTAS":
             case "DIFFERENT UNITS":
                 return {
                     icon: "⚠️",
-                    tooltipLabel: lang === 'es' ? "Tiene ingredientes con unidades distintas." : "Has ingredients with different units.",
+                    tooltipLabel: t('recipe_differentunits')
                 };
             case "NO SUFICIENTE":
             case "NOT ENOUGH":
                 return {
                     icon: "❗",
-                    tooltipLabel: lang === 'es' ? "No tiene suficientes ingredientes." : "Doesn't have enough ingredients.",
+                    tooltipLabel: t('recipe_notenough')
                 };
             case "PUEDE HACERLO":
             case "CAN MAKE":
                 return {
                     icon: "✅",
-                    tooltipLabel: lang === 'es' ? "Puede hacer la receta." : "Can make the recipe.",
+                    tooltipLabel: t('recipe_canmake')
                 };
             default:
                 return {
                     icon: "❓",
-                    tooltipLabel: lang === 'es' ? "Estado desconocido de los ingredientes." : "Unknown ingredient status.",
+                    tooltipLabel: t('recipe_unknown')
                 };
         }
     }
