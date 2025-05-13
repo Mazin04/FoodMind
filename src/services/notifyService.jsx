@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 
 const defaultOptions = {
     duration: 4000,
-    position: "bottom-center",
+    position: "top-center",
     style: {
         background: "#333",
         color: "#fff",

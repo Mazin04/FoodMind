@@ -9,6 +9,8 @@ import URLS from "@/constants/urls";
 import { useTheme } from "@/context/ThemeContext.jsx";
 import LanguageSelect from "@/components/LanguageSelect.jsx";
 import PageLoader from "@/components/PageLoader.jsx";
+import { MoonLoader } from "react-spinners";
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 const Settings = () => {
     const { t } = useTranslation();
@@ -20,14 +22,23 @@ const Settings = () => {
     const [date, setDate] = useState('');
 
     const [loading, setLoading] = useState(true);
+    const [signOutModalIsOpen, setSignOutModalIsOpen] = useState(false);
+    const [signOutLoading, setSignOutLoading] = useState(false);
+
+    const handleOpenModalSignOut = () => {
+        // Open modal to confirm sign out
+        setSignOutModalIsOpen(true);
+    }
 
     const handleSignOut = async () => {
-        console.log("Signing out...");
         try {
             await logout();
             navigate(URLS.MAIN);
         } catch (error) {
-
+            console.error("Error signing out:", error);
+        } finally {
+            setSignOutLoading(false);
+            setSignOutModalIsOpen(false);
         }
     };
 
@@ -58,6 +69,7 @@ const Settings = () => {
             {loading ? (
                 <PageLoader />
             ) : (
+                <>
                 <div className="w-full h-full py-6 sm:p-6 flex flex-col items-center justify-center text-neutral-900 dark:text-white bg-stone-100 dark:bg-neutral-900">
                     <h1 className="text-4xl font-bold">{t('settings')}</h1>
                     <div className='w-[90%] sm:w-[80%] lg:w-[60%] h-full flex flex-col items-start justify-start mt-8'>
@@ -99,13 +111,28 @@ const Settings = () => {
                             </div>
                             <button
                                 className="flex items-center bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-200 active:bg-red-800"
-                                onClick={handleSignOut}
+                                onClick={handleOpenModalSignOut}
                             >
-                                <SignOut size={24} weight="bold" className="mr-2" />
+                                {signOutLoading ? (
+                                    <MoonLoader size={18} />
+                                ) : (
+                                    <SignOut size={24} weight="bold" className="mr-2" />
+                                )}
                             </button>
                         </div>
                     </div>
                 </div>
+                <ConfirmationModal
+                    isOpen={signOutModalIsOpen}
+                    onCancel={() => setSignOutModalIsOpen(false)}
+                    onConfirm={handleSignOut}
+                    loading={signOutLoading}
+                    title={t('settings_sign_out')}
+                    subtitle={t('settings_sign_out_confirm')}
+                    cancelText={t('cancel')}
+                    confirmText={t('confirm')}
+                />
+                </>
             )}
         </>
 

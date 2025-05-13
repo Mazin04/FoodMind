@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router';
 import { useTheme } from '@/context/ThemeContext';
 import { House, DotsThree, User, Gear, Basket } from '@phosphor-icons/react';
 import { getUser } from '@/services/authService';
-import { CircleLoader } from "react-spinners";
+import { MoonLoader } from "react-spinners";
 
 import w_logo from '@/assets/images/logos/Logo_w_mode.png';
 import b_logo from '@/assets/images/logos/Logo_b_mode.png';
@@ -123,7 +123,7 @@ function Navbar() {
                                 }}
                             />
                         ) : (
-                            <CircleLoader
+                            <MoonLoader
                                 color={isDarkMode ? "#fff" : "#000"}
                                 size={30}
                                 className="w-10 h-10 rounded-full border-2 border-neutral-700 dark:border-neutral-500"

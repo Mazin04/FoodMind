@@ -165,3 +165,37 @@ export const getUserPantry = async () => {
         throw error;        
     }
 }
+
+export const deleteIngredientPantry = async (ingredientId) => {
+    try {
+        const lang = localStorage.getItem('i18nextLng') || 'es';
+        await withCSRF();
+        const { data } = await instance.delete(`/api/ingredients/${ingredientId}`, {
+            withCredentials: true,
+            withXSRFToken: true,
+            headers: { 'Content-Type': 'application/json' },
+            lang,
+        });
+        notifyService.success(data.message, { duration: 4000 });
+        return data;
+    } catch (error) {
+        notifyService.error(error.response.data.message, { duration: 2000 });        
+    }
+}
+
+export const cleanIngredientPantry = async () => {
+    try {
+        const lang = localStorage.getItem('i18nextLng') || 'es';
+        await withCSRF();
+        const { data } = await instance.delete('/api/ingredients', {
+            withCredentials: true,
+            withXSRFToken: true,
+            headers: { 'Content-Type': 'application/json' },
+            lang,
+        });
+        notifyService.success(data.message, { duration: 4000 });
+        return data;    
+    } catch (error) {
+        notifyService.error(error.response.data.message, { duration: 2000 });
+    }
+}

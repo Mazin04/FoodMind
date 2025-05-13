@@ -28,7 +28,6 @@ const RecipeCard = ({ recipe }) => {
         navigate(`/recipe/${recipe.id}`);
     };
 
-    // TODO: Add translations in i18next
     const getMatchIcon = () => {
         switch (ingredients_match) {
             case "NO TIENE":
