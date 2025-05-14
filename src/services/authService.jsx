@@ -153,7 +153,7 @@ export const getUserPantry = async () => {
             withCredentials: true,
             withXSRFToken: true,
             headers: { 'Content-Type': 'application/json' },
-            lang,
+            params: { lang },
         });
         return data;
     } catch (error) {
@@ -197,5 +197,23 @@ export const cleanIngredientPantry = async () => {
         return data;    
     } catch (error) {
         notifyService.error(error.response.data.message, { duration: 2000 });
+    }
+}
+
+export const editIngredientPantry = async (ingredientId, newValues) => {
+    try {
+        const lang = localStorage.getItem('i18nextLng') || 'es';
+        await withCSRF();
+        const { data } = await instance.put(`/api/ingredients/${ingredientId}`, {
+            ...newValues,
+            withCredentials: true,
+            withXSRFToken: true,
+            headers: { 'Content-Type': 'application/json' },
+            lang,
+        });
+        notifyService.success(data.message, { duration: 4000 });
+        return data;
+    } catch (error) {
+        notifyService.error(error.response.data.message, { duration: 2000 })
     }
 }

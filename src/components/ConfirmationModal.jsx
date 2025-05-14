@@ -22,9 +22,9 @@ const ConfirmationModal = ({
       shouldCloseOnEsc={true}
       ariaHideApp={false}
     >
-      <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-md w-[90%] max-w-xl sm:w-[80%] w-full max-h-[90vh] overflow-y-auto space-y-6 m-4">
-        <h2 className="text-2xl font-semibold text-neutral-800 dark:text-white text-center break-words">{title}</h2>
-        <p className="text-neutral-500 dark:text-neutral-400 text-center break-words whitespace-pre-wrap">{subtitle}</p>
+      <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-md max-w-md sm:w-[80%] max-h-[90vh] overflow-y-auto space-y-5 m-4">
+        <h2 className="text-2xl font-bold text-neutral-800 dark:text-white text-center break-words">{title}</h2>
+        <p className="text-neutral-500 font-semibold dark:text-neutral-400 text-center break-words whitespace-pre-wrap">{subtitle}</p>
 
         {loading ? (
           <div className="flex justify-center items-center">

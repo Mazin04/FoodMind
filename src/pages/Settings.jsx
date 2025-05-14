@@ -116,7 +116,7 @@ const Settings = () => {
                                 {signOutLoading ? (
                                     <MoonLoader size={18} />
                                 ) : (
-                                    <SignOut size={24} weight="bold" className="mr-2" />
+                                    <SignOut size={24} weight="bold"/>
                                 )}
                             </button>
                         </div>
