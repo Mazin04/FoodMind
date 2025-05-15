@@ -119,7 +119,7 @@ const Pantry = () => {
         }
     }
 
-    // TODO: Add modal translations
+    // TODO: Add translations
     return (
         loading ? (
             <ContentLoader />

@@ -13,11 +13,6 @@ const PantryHeaderButtons = ({
     toggleSearchIngredient,
     t
 }) => {
-    const handleOpenModalCleanPantry = () => {
-        // Open modal to confirm cleaning pantry
-        setCleanPantryModalIsOpen(true);
-    }
-
     return (
         <div className="flex flex-row items-center justify-between mb-4">
             <h1 className="text-2xl font-semibold text-neutral-800 dark:text-white">{t('title_pantry')}</h1>
@@ -49,7 +44,7 @@ const PantryHeaderButtons = ({
                         </button>
                         <button
                             className="bg-red-500 text-white flex p-1 md:p-2 rounded-md hover:bg-red-700 transition duration-200 disabled:cursor-not-allowed disabled:bg-red-900 disabled:text-stone-400"
-                            onClick={handleOpenModalCleanPantry}
+                            onClick={() => setCleanPantryModalIsOpen(true)}
                             disabled={cleanPantryLoading || addingIngredient || shouldBeDisabled || addIngredientLoading}
                         >
                             {cleanPantryLoading ? (
