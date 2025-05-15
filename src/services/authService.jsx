@@ -217,3 +217,43 @@ export const editIngredientPantry = async (ingredientId, newValues) => {
         notifyService.error(error.response.data.message, { duration: 2000 })
     }
 }
+
+export const getIngredientList = async () => {
+    try {
+        const lang = localStorage.getItem('i18nextLng') || 'es';
+        await withCSRF();
+        const { data } = await instance.get('/api/ingredients/list', {
+            withCredentials: true,
+            withXSRFToken: true,
+            headers: { 'Content-Type': 'application/json' },
+            params: { lang },
+        });
+        return data;
+    } catch (error) {
+        if (error.response && error.response.status === 401) {
+            notifyService.error("Session expired, please login again", { duration: 2000 });
+        } else {
+            notifyService.error("Can't connect with the server", { duration: 2000 });
+        }
+        throw error;
+    }
+}
+
+export const addIngredientPantry = async (ingredient) => {
+    try {
+        const lang = localStorage.getItem('i18nextLng') || 'es';
+        await withCSRF();
+        const { data } = await instance.post('/api/ingredients', {
+            ...ingredient,
+            withCredentials: true,
+            withXSRFToken: true,
+            headers: { 'Content-Type': 'application/json' },
+            lang,
+        });
+        notifyService.success(data.message, { duration: 4000 });
+        return data;
+    } catch (error) {
+        notifyService.error(error.response.data.message, { duration: 2000 });
+        console.error(error);
+    }
+}

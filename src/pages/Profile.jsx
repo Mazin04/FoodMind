@@ -44,7 +44,6 @@ const Profile = () => {
                 setPlaceholder(placeholderUrl);
                 setAvatar(avatarUrl);
                 setFinalAvatar(avatarUrl || placeholderUrl);
-
                 const recipes = await userRecipes();
                 setUserCreatedRecipes(recipes);
                 setCurrentMethodUserCreated(true);
