@@ -4,7 +4,6 @@ const URLS = {
     PROFILE: '/profile',
     PANTRY: '/pantry',
     SETTINGS: '/settings',
-    EXAMPLE: '/example',
     RECIPE_DETAILS: '/recipe/:id',
 };
 

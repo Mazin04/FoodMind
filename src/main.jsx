@@ -1,22 +1,21 @@
-import { createRoot } from 'react-dom/client'
 import { Suspense } from 'react'
+import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router'
 
-import HomeLayout from '@/layout/HomeLayout.jsx'
-import App from '@/pages/App.jsx'
-import Example from '@/pages/Example.jsx'
-import Home from '@/pages/Home.jsx'
-import Profile from '@/pages/Profile'
-import Settings from '@/pages/Settings'
-import Pantry from './pages/Pantry'
-import RecipeDetails from '@/pages/recipes/RecipeDetails'
+import App from '@/app/App'
+import Home from '@/app/pages/Home'
+import HomeLayout from '@/app/layout/HomeLayout'
+import Profile from '@/app/pages/Profile'
+import Settings from '@/app/pages/Settings'
+import Pantry from '@/features/pantry/pages/Pantry'
+import RecipeDetails from '@/features/recipes/pages/RecipeDetails'
+import PageLoader from '@/shared/components/PageLoader'
+
+import { ThemeProvider } from '@/shared/context/ThemeContext'
+import GuestRoutes from '@/router/GuestRoutes'
+import ProtectedRoutes from '@/router/ProtectedRoutes'
 
 import { Toaster } from 'react-hot-toast'
-import GuestRoutes from '@/utils/GuestRoutes'
-import ProtectedRoutes from '@/utils/ProtectedRoutes.jsx'
-import PageLoader from '@/components/PageLoader.jsx'
-
-import { ThemeProvider } from '@/context/ThemeContext.jsx'
 
 import URLS from '@/constants/urls.js'
 import '@/i18n.js'
@@ -42,8 +41,6 @@ createRoot(document.getElementById('root')).render(
                 <Route path={URLS.PANTRY} element={<Pantry />} />
                 <Route path={URLS.RECIPE_DETAILS} element={<RecipeDetails />} />
               </Route>
-
-              <Route path={URLS.EXAMPLE} element={<Example />} />
             </Route>
             <Route path="*" element={<Navigate to={URLS.MAIN} replace />} />
           </Routes>
