@@ -9,6 +9,7 @@ import Home from '@/pages/Home.jsx'
 import Profile from '@/pages/Profile'
 import Settings from '@/pages/Settings'
 import Pantry from './pages/Pantry'
+import RecipeDetails from '@/pages/recipes/RecipeDetails'
 
 import { Toaster } from 'react-hot-toast'
 import GuestRoutes from '@/utils/GuestRoutes'
@@ -39,6 +40,7 @@ createRoot(document.getElementById('root')).render(
                 <Route path={URLS.PROFILE} element={<Profile />} />
                 <Route path={URLS.SETTINGS} element={<Settings />} />
                 <Route path={URLS.PANTRY} element={<Pantry />} />
+                <Route path={URLS.RECIPE_DETAILS} element={<RecipeDetails />} />
               </Route>
 
               <Route path={URLS.EXAMPLE} element={<Example />} />

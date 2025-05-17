@@ -5,6 +5,7 @@ const URLS = {
     PANTRY: '/pantry',
     SETTINGS: '/settings',
     EXAMPLE: '/example',
+    RECIPE_DETAILS: '/recipe/:id',
 };
 
 export default URLS;

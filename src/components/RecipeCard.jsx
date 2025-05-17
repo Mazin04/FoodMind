@@ -1,7 +1,9 @@
 import { t } from "i18next";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { Heart } from "@phosphor-icons/react";
 import { Tooltip } from "react-tooltip";
+import { addRecipeToFavorites, removeRecipeFromFavorites } from "@/services/recipeService";
 
 const RecipeCard = ({ recipe }) => {
     const navigate = useNavigate();
@@ -11,17 +13,17 @@ const RecipeCard = ({ recipe }) => {
     const [ingredients_match, setIngredientsMatch] = useState("");
     const [stepsCount, setStepsCount] = useState(0);
     const [types, setTypes] = useState([]);
+    const [favorite, setFavorite] = useState(false);
 
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         setName(recipe.name);
         setDescription(recipe.description);
+        setFavorite(recipe.is_favourite);
         setImage(recipe.image);
         setIngredientsMatch(recipe.ingredients_match);
         setStepsCount(recipe.steps_count);
         setTypes(recipe.types);
-        setLoading(false);
     }, [recipe]);
 
     const handleClick = () => {
@@ -62,18 +64,40 @@ const RecipeCard = ({ recipe }) => {
         }
     }
 
+    const handleFavoriteClick = async(e) => {
+        e.stopPropagation();
+        if (favorite) {
+            try {
+                setFavorite(false);
+                await removeRecipeFromFavorites(recipe.id);
+            } catch (error) {
+                console.error("Error removing recipe from favorites:", error);
+                setFavorite(true);
+            }
+        } else {
+            try {
+                setFavorite(true);
+                await addRecipeToFavorites(recipe.id);
+            } catch (error) {
+                console.error("Error adding recipe to favorites:", error);
+                setFavorite(false);
+            }
+        }
+    }
+
     const { icon, tooltipLabel } = getMatchIcon();
     return (
         <div
             className="flex flex-col items-center justify-start w-full h-full bg-white dark:bg-neutral-800 rounded-lg shadow-md cursor-pointer max-h-[360px]"
-            onClick={handleClick}
         >
-            <div className="relative w-full h-48">
+            <div className="relative w-full h-48 cursor-default">
                 <img
                     src={image}
                     alt={name}
-                    className="w-full h-full object-cover rounded not-draggable"
+                    className="w-full h-full object-cover rounded not-draggable cursor-pointer"
+                    onClick={handleClick}
                 />
+                <Heart size={30} weight={favorite ? 'fill' : 'duotone'} className="absolute top-2 left-2 text-red-500 cursor-pointer focus:outline-none" onClick={handleFavoriteClick} />
                 <span
                     id={`tooltip-${recipe.id}`}
                     className="absolute top-2 right-2 bg-blue-500/80 text-white text-sm font-semibold p-1 rounded-lg"
@@ -88,7 +112,7 @@ const RecipeCard = ({ recipe }) => {
                     content={tooltipLabel}
                 />
             </div>
-            <div className="flex flex-col items-start justify-start p-4 w-full">
+            <div className="flex flex-col items-start justify-start p-4 w-full" onClick={handleClick}>
                 <div className="flex items-center justify-between w-full mb-2">
                     <h2 className="text-xl font-bold text-neutral-900 dark:text-white">{name}</h2>
                     <span className="text-sm text-neutral-500 dark:text-neutral-400">

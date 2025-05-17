@@ -10,8 +10,6 @@ import PantryHeaderButtons from '@/components/ingredients/PantryHeaderButtons';
 
 
 const Pantry = () => {
-    const unitOptions = ['unit_gr', 'unit_ml', 'unit_u'];
-
     const { t } = useTranslation();
 
     const [userPantry, setUserPantry] = useState([]);
@@ -68,7 +66,7 @@ const Pantry = () => {
             try {
                 const ingredientList = await getIngredientList();
                 setIngredientList(ingredientList);
-                setAddValues({ ingredient: null, quantity: '', unit: unitOptions[0] });
+                setAddValues({ ingredient: null, quantity: '', unit: 'unit_gr' });
                 // Open modal to add new ingredient
                 setAddIngredientModalIsOpen(true);
             } catch (error) {
@@ -87,7 +85,7 @@ const Pantry = () => {
                 ingredient_id: addValues.ingredient.id,
                 name: addValues.ingredient.name,
                 quantity: parseFloat(addValues.quantity),
-                unit: addValues.unit
+                unit: addValues.unit ? addValues.unit : 'unit_gr'
             };
             const response = await addIngredientPantry(ingredient);
             if (response) {
