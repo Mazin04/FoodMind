@@ -3,11 +3,9 @@ import { FaWhatsapp, FaFacebook, FaShare } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { IoMdCloseCircle } from "react-icons/io";
 import { useTranslation } from "react-i18next";
-
 const ShareModal = ({
     isOpen,
     onClose,
-
 }) => {
     const { t } = useTranslation();
     return (

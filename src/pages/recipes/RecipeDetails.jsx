@@ -10,12 +10,14 @@ import { IoIosWarning } from "react-icons/io";
 import { FaExclamationCircle } from "react-icons/fa";
 import { GrStatusUnknown } from "react-icons/gr";
 import { Heart, ShareNetwork } from "@phosphor-icons/react";
+import { FaFilePdf } from "react-icons/fa6";
 
 // Services & Components
 import { getRecipeById, addRecipeToFavorites, removeRecipeFromFavorites } from "@/services/recipeService";
 import PageLoader from "@/components/PageLoader";
 import ShareModal from "@/components/ShareModal";
 import URLS from '@/constants/urls.js';
+import { exportToPdf } from "@/lib/exportToPdf";
 
 const getMatchIcon = (match, width, t) => {
     const size = width < 640 ? 24 : 32;
@@ -53,7 +55,7 @@ const RecipeDetails = () => {
             try {
                 const data = await getRecipeById(id);
                 if (!data || data.error) {
-                    navigate(data?.error ? URLS.PANTRY : URLS.HOME);
+                    navigate(data?.error ? URLS.HOME : URLS.HOME);
                     return;
                 }
                 setRecipe(data);
@@ -90,6 +92,10 @@ const RecipeDetails = () => {
         }
     };
 
+    const handlePDFDownload = async (e) => {
+        console.log("PDF Download clicked");
+    }
+
     const { icon, tooltipLabel } = useMemo(() => {
         return getMatchIcon(recipe?.ingredients_match, windowWidth, t);
     }, [recipe?.ingredients_match, windowWidth, t]);
@@ -116,6 +122,9 @@ const RecipeDetails = () => {
                         </button>
                         <button className="p-2 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition" onClick={() => setShareModalIsOpen(true)}>
                             <ShareNetwork size={windowWidth < 640 ? 24 : 32} weight="duotone" className="text-blue-500 cursor-pointer" />
+                        </button>
+                        <button className="p-2 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition" onClick={() => exportToPdf(recipe)}>
+                            <FaFilePdf size={windowWidth < 640 ? 24 : 32} className="text-red-500 cursor-pointer" />
                         </button>
                     </div>
                 </div>
@@ -167,14 +176,16 @@ const RecipeDetails = () => {
                                         {step}
                                     </span>
                                 </li>
-
                             ))}
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <ShareModal isOpen={shareModalIsOpen} onClose={() => setShareModalIsOpen(false)} recipe={recipe} />
+            <ShareModal
+                isOpen={shareModalIsOpen}
+                onClose={() => setShareModalIsOpen(false)}
+            />
         </>
     );
 };
