@@ -38,9 +38,10 @@ const Pantry = () => {
     const [searchIngredient, setSearchIngredient] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
-    const filteredPantry = userPantry.filter((item) =>
-        item.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredPantry = Array.isArray(userPantry)
+        ? userPantry.filter((item) =>
+            item.name.toLowerCase().includes(searchQuery.toLowerCase())
+        ) : [];
 
     // Values for the ingredient being added
     const [addValues, setAddValues] = useState({});
@@ -90,7 +91,7 @@ const Pantry = () => {
             };
             const response = await addIngredientPantry(ingredient);
             if (response) {
-                setUserPantry(prevPantry => [...prevPantry, ingredient]);
+                setUserPantry(prevPantry => (Array.isArray(prevPantry) ? [...prevPantry, ingredient] : [ingredient]));
                 setAddValues({});
             }
         } catch (error) {
