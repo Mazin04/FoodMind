@@ -24,6 +24,7 @@ import URLS from '@/constants/urls';
 const AuthForm = ({ isLoginMode, isDarkMode }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
   const [registerPassword, setRegisterPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -246,7 +247,7 @@ const AuthForm = ({ isLoginMode, isDarkMode }) => {
           <motion.div
             whileTap={{ scale: 0.97 }}
             className='w-full flex flex-row justify-center items-center mt-4 dark:bg-neutral-800 bg-blue-50 p-2 rounded-lg cursor-pointer hover:bg-blue-200 active:bg-blue-300 shadow-md hover:shadow-lg transition-all duration-200 group'
-            onClick={() => window.open('http://localhost:8000/auth/google/redirect', '_self')}
+            onClick={() => window.open(`${backendUrl}/auth/google/redirect`, '_self')}
           >
             <FaGoogle className='text-2xl text-blue-500' />
             <p className='text-sm text-center dark:text-white text-neutral-900 dark:group-hover:text-black group-hover:text-blue-500 ml-2'>

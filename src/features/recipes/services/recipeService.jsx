@@ -60,9 +60,16 @@ export const removeRecipeFromFavorites = async (recipeId) => {
     } catch (error) {
         notifyService.error(error, { duration: 2000 });
         console.error(error);
+        return (error.response.data);
     }
 }
 
+/**
+ * @description This function is used to get a recipe by its ID.
+ * It sends a GET request to the server with the recipe ID and the user's language preference.
+ * @param {int} recipeId
+ * @returns
+ */
 export const getRecipeById = async (recipeId) => {
     try {
         const lang = localStorage.getItem('i18nextLng') || 'es';
@@ -81,5 +88,55 @@ export const getRecipeById = async (recipeId) => {
             notifyService.error(error.response.data.error, { duration: 3000 });
             return null;
         }
+    }
+}
+
+/**
+ * @description This function is used to make a recipe public.
+ * It sends a POST request to the server with the recipe ID and the user's language preference.
+ * @param {int} recipeId
+ * @returns
+ */
+export const makeRecipePublic = async (recipeId) => {
+    try {
+        const lang = localStorage.getItem('i18nextLng') || 'es';
+        await withCSRF();
+        const { data } = await instance.post(`/api/recipes/${recipeId}/public`, {
+            withCredentials: true,
+            withXSRFToken: true,
+            headers: { 'Content-Type': 'application/json' },
+            params: { lang },
+        });
+        notifyService.success(data.message, { duration: 4000 });
+        return data;
+    } catch (error) {
+        notifyService.error(error, { duration: 2000 });
+        console.error(error);
+        return (error.response.data);
+    }
+}
+
+/**
+ * @description This function is used to make a recipe private.
+ * It sends a POST request to the server with the recipe ID and the user's language preference.
+ * @param {int} recipeId
+ * @returns
+ */
+export const makeRecipePrivate = async (recipeId) => {
+    try {
+        const lang = localStorage.getItem('i18nextLng') || 'es';
+        await withCSRF();
+        const { data } = await instance.post(`/api/recipes/${recipeId}/private`, {
+            withCredentials: true,
+            withXSRFToken: true,
+            headers: { 'Content-Type': 'application/json' },
+            params: { lang },
+        });
+        notifyService.success(data.message, { duration: 4000 });
+        return data;
+    } catch (error) {
+        notifyService.error(error, { duration: 2000 });
+        console.error(error);
+        return (error.response.data);
     }
 }
