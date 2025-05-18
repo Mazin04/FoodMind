@@ -15,6 +15,7 @@ import { FaFilePdf } from "react-icons/fa6";
 
 // Services & Components
 import { getRecipeById, addRecipeToFavorites, removeRecipeFromFavorites, makeRecipePrivate, makeRecipePublic } from "@/features/recipes/services/recipeService";
+import { getUser } from "@/features/auth/services/authService";
 import PageLoader from "@/shared/components/PageLoader";
 import ShareModal from "@/shared/components/ShareModal";
 import { exportToPdf } from "@/shared/lib/exportToPdf";
@@ -46,6 +47,7 @@ const RecipeDetails = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
 
+    const [userID, setUserID] = useState(null);
     const [recipe, setRecipe] = useState(null);
     const [favorite, setFavorite] = useState(false);
     const [is_private, setIsPrivate] = useState(false);
@@ -56,6 +58,8 @@ const RecipeDetails = () => {
     useEffect(() => {
         const fetchRecipe = async () => {
             try {
+                const user = await getUser();
+                setUserID(user.id);
                 const data = await getRecipeById(id);
                 if (!data || data.error) {
                     navigate(URLS.HOME);
@@ -136,7 +140,7 @@ const RecipeDetails = () => {
                             {icon}
                         </button>
                         <Tooltip anchorSelect={`#tooltip-${id}`} place="bottom-end" style={{ position: "absolute", zIndex: 9999 }} content={tooltipLabel} />
-                        <button id={`tooltip-private${id}`} className="p-2 sm:p-3 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition" onClick={handlePrivateClick}>
+                        <button id={`tooltip-private${id}`} className="p-2 sm:p-3 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition" onClick={handlePrivateClick} disabled={recipe.creator.id !== userID}>
                             {is_private ? (
                                 <FaLock size={24} className="text-gray-500" />
                             ) : (
