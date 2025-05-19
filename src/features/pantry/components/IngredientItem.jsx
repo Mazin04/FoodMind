@@ -35,9 +35,30 @@ const IngredientItem = ({
     const [editedValues, setEditedValues] = useState({});
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+
+        let newValue = value;
+
+        if (name === 'quantity') {
+            // Solo aplica la lógica si es un número válido
+            if (value === '') {
+                newValue = '';
+            } else {
+                const num = Number(value);
+                if (isNaN(num)) {
+                    newValue = '';
+                } else if (num < 1) {
+                    newValue = 1;
+                } else if (num > 99999) {
+                    newValue = 99999;
+                } else {
+                    newValue = num;
+                }
+            }
+        }
+
         setEditedValues(prev => ({
             ...prev,
-            [name]: value
+            [name]: newValue
         }));
     }
 
@@ -54,12 +75,20 @@ const IngredientItem = ({
     const confirmEditIngredient = async (ingredientId) => {
         setConfirmEditingIngredient(true);
         try {
-            const response = await editIngredientPantry(ingredientId, editedValues);
+            let quantity = editedValues.quantity === '' ? 1 : Number(editedValues.quantity);
+            if (isNaN(quantity) || quantity < 1) quantity = 1;
+            if (quantity > 99999) quantity = 99999;
+
+            const response = await editIngredientPantry(ingredientId, {
+                quantity,
+                unit: editedValues.unit
+            });
+
             if (response) {
                 setUserPantry(prevPantry =>
                     prevPantry.map(item =>
                         item.ingredient_id === ingredientId
-                            ? { ...item, quantity: editedValues.quantity, unit: editedValues.unit }
+                            ? { ...item, quantity, unit: editedValues.unit }
                             : item
                     )
                 );
@@ -83,7 +112,7 @@ const IngredientItem = ({
                             <input
                                 type='number'
                                 name='quantity'
-                                value={editedValues.quantity || ingredient.quantity}
+                                value={editedValues.quantity !== undefined ? editedValues.quantity : ingredient.quantity}
                                 onChange={handleInputChange}
                                 className="w-15 p-1 rounded-md border dark:bg-neutral-700 dark:text-white text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             />

@@ -28,7 +28,7 @@ const ConfirmationModal = ({
 
         {loading ? (
           <div className="flex justify-center items-center">
-            <MoonLoader size={24} />
+            <MoonLoader size={24} color="#4A90E2" />
           </div>
         ) : (
           <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">

@@ -9,16 +9,17 @@ import { IoCloseSharp } from "react-icons/io5";
 import { IoIosWarning } from "react-icons/io";
 import { FaExclamationCircle, FaLock, FaLockOpen } from "react-icons/fa";
 import { GrStatusUnknown } from "react-icons/gr";
-import { Heart, ShareNetwork } from "@phosphor-icons/react";
+import { Heart, ShareNetwork, Trash } from "@phosphor-icons/react";
 import { FaFilePdf } from "react-icons/fa6";
 
 
 // Services & Components
-import { getRecipeById, addRecipeToFavorites, removeRecipeFromFavorites, makeRecipePrivate, makeRecipePublic } from "@/features/recipes/services/recipeService";
+import { getRecipeById, addRecipeToFavorites, removeRecipeFromFavorites, makeRecipePrivate, makeRecipePublic, deleteRecipe } from "@/features/recipes/services/recipeService";
 import { getUser } from "@/features/auth/services/authService";
 import PageLoader from "@/shared/components/PageLoader";
 import ShareModal from "@/shared/components/ShareModal";
 import { exportToPdf } from "@/shared/lib/exportToPdf";
+import ConfirmationModal from '@/shared/components/ConfirmationModal';
 
 import URLS from '@/constants/urls.js';
 
@@ -54,6 +55,8 @@ const RecipeDetails = () => {
     const [loading, setLoading] = useState(true);
     const [windowWidth, setWindowWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1024);
     const [shareModalIsOpen, setShareModalIsOpen] = useState(false);
+    const [deleteRecipeModalIsOpen, setDeleteRecipeModalIsOpen] = useState(false);
+    const [deleteRecipeLoading, setDeleteRecipeLoading] = useState(false);
 
     useEffect(() => {
         const fetchRecipe = async () => {
@@ -119,6 +122,24 @@ const RecipeDetails = () => {
         }
     }
 
+    const handleDeleteRecipe = async () => {
+        console.log("Deleting recipe...");
+        setDeleteRecipeLoading(true);
+        try {
+            const result = await deleteRecipe(id);
+            if (result && !result.error) {
+                navigate(URLS.HOME);
+            } else {
+                console.error("Error deleting recipe:", result.error);
+            }
+        } catch (error) {
+            console.error("Error deleting recipe:", error);
+        } finally {
+            setDeleteRecipeLoading(false);
+            setDeleteRecipeModalIsOpen(false);
+        }
+    }
+
     const { icon, tooltipLabel } = useMemo(() => {
         return getMatchIcon(recipe?.ingredients_match, windowWidth, t);
     }, [recipe?.ingredients_match, windowWidth, t]);
@@ -133,37 +154,44 @@ const RecipeDetails = () => {
                 <img src={image} alt={name || "Recipe"} className="w-full h-1/3 object-cover shadow-md shadow-blue-800 min-h-[200px] lg:min-h-[400px] rounded-b-sm not-draggable" />
 
                 {/* Head Section */}
-                <div className="flex flex-col sm:flex-row sm:items-center items-start space-y-2 sm:space-y-0 justify-between w-full p-4">
-                    <h1 className="text-2xl font-bold">{name.charAt(0).toUpperCase() + name.slice(1)}</h1>
-                    <div className="flex flex-row items-center space-x-4 ">
-                        <button id={`tooltip-${id}`} className="p-2 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition">
-                            {icon}
-                        </button>
-                        <Tooltip anchorSelect={`#tooltip-${id}`} place="bottom-end" style={{ position: "absolute", zIndex: 9999 }} content={tooltipLabel} />
-                        <button id={`tooltip-private${id}`} className="p-2 sm:p-3 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition" onClick={handlePrivateClick} disabled={recipe.creator.id !== userID}>
-                            {is_private ? (
-                                <FaLock size={24} className="text-gray-500" />
-                            ) : (
-                                <FaLockOpen size={24} className="text-gray-500" />
-                            )}
-                        </button>
-                        <Tooltip anchorSelect={`#tooltip-private${id}`} place="bottom-end" style={{ position: "absolute", zIndex: 9999 }} content={is_private ? t('recipe_private') : t('recipe_public')} />
-                        <button className="p-2 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition" onClick={handleFavoriteClick}>
-                            <Heart size={windowWidth < 640 ? 24 : 32} weight={favorite ? 'fill' : 'duotone'} className="text-red-500 cursor-pointer" />
-                        </button>
-                        <button className="p-2 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition" onClick={() => setShareModalIsOpen(true)}>
-                            <ShareNetwork size={windowWidth < 640 ? 24 : 32} weight="duotone" className="text-blue-500 cursor-pointer" />
-                        </button>
-                        <button className="p-2 sm:p-3 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition" onClick={() => exportToPdf(recipe)}>
-                            <FaFilePdf size={24} className="text-red-500 cursor-pointer" />
-                        </button>
+                <div className="flex flex-col lg:flex-row sm:items-center items-start space-y-2 sm:space-y-0 justify-between w-full p-4">
+                    <h1 className="text-2xl font-bold w-full">{name.charAt(0).toUpperCase() + name.slice(1)}</h1>
+                    <div className="w-full overflow-x-auto">
+                        <div className="flex flex-row items-center lg:justify-end space-x-3 sm:space-x-4 min-h-14">
+                            <button id={`tooltip-${id}`} className="p-2 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition">
+                                {icon}
+                            </button>
+                            <Tooltip anchorSelect={`#tooltip-${id}`} place="bottom-end" style={{ position: "absolute", zIndex: 9999 }} content={tooltipLabel} />
+                            <button id={`tooltip-private${id}`} className="p-2 sm:p-3 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition" onClick={handlePrivateClick} disabled={recipe.creator.id !== userID}>
+                                {is_private ? (
+                                    <FaLock size={24} className="text-gray-500" />
+                                ) : (
+                                    <FaLockOpen size={24} className="text-gray-500" />
+                                )}
+                            </button>
+                            {recipe.creator.id === userID ? (
+                                <button className="p-2 sm:p-2 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition" onClick={() => setDeleteRecipeModalIsOpen(true)}>
+                                    <Trash size={windowWidth < 640 ? 24 : 32} className="text-red-500 cursor-pointer" />
+                                </button>
+                            ) : null}
+                            <Tooltip anchorSelect={`#tooltip-private${id}`} place="bottom-end" style={{ position: "absolute", zIndex: 9999 }} content={is_private ? t('recipe_private') : t('recipe_public')} />
+                            <button className="p-2 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition" onClick={handleFavoriteClick}>
+                                <Heart size={windowWidth < 640 ? 24 : 32} weight={favorite ? 'fill' : 'duotone'} className="text-red-500 cursor-pointer" />
+                            </button>
+                            <button className="p-2 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition" onClick={() => setShareModalIsOpen(true)}>
+                                <ShareNetwork size={windowWidth < 640 ? 24 : 32} weight="duotone" className="text-blue-500 cursor-pointer" />
+                            </button>
+                            <button className="p-2 sm:p-3 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition" onClick={() => exportToPdf(recipe)}>
+                                <FaFilePdf size={24} className="text-red-500 cursor-pointer" />
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 {/* Details Section */}
                 <div className="w-full h-full overflow-y-auto flex flex-col items-start space-y-4 pb-4">
                     {/* Types */}
-                <div className="overflow-x-auto overflow-hidden min-h-12 flex flex-row items-center space-x-4 w-full py-2 px-4 bg-neutral-100 dark:bg-neutral-900">
+                    <div className="overflow-x-auto overflow-hidden min-h-12 flex flex-row items-center space-x-4 w-full py-2 px-4 bg-neutral-100 dark:bg-neutral-900">
                         {types.map((type, idx) => (
                             <div key={idx} className="flex items-center justify-center bg-neutral-200 dark:bg-neutral-800 rounded-full px-4 py-2 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition">
                                 <span className="text-sm font-semibold">{type}</span>
@@ -216,6 +244,18 @@ const RecipeDetails = () => {
             <ShareModal
                 isOpen={shareModalIsOpen}
                 onClose={() => setShareModalIsOpen(false)}
+            />
+
+            <ConfirmationModal
+                isOpen={deleteRecipeModalIsOpen}
+                onCancel={() => setDeleteRecipeModalIsOpen(false)}
+                onConfirm={handleDeleteRecipe}
+                title={t('delete_recipe')}
+                subtitle={t('delete_recipe_subtitle')}
+                cancelText={t('cancel')}
+                confirmText={t('confirm')}
+                message={t('delete_recipe_message')}
+                loading={deleteRecipeLoading}
             />
         </>
     );

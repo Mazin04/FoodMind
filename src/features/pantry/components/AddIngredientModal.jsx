@@ -110,9 +110,13 @@ const AddIngredientModal = ({
                         <input
                             type="number"
                             name="quantity"
+                            min={0}
+                            max={99999}
                             value={addValues.quantity || ''}
                             onChange={(e) => {
-                                const value = Math.min(Number(e.target.value), 99999);
+                                let value = Number(e.target.value);
+                                if (value < 0) value = 0;
+                                if (value > 99999) value = 99999;
                                 setAddValues({ ...addValues, quantity: value });
                             }}
                             className="w-full p-2 rounded-md border dark:border-neutral-700 dark:bg-neutral-700 dark:text-white bg-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"

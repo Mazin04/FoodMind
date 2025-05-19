@@ -140,3 +140,27 @@ export const makeRecipePrivate = async (recipeId) => {
         return (error.response.data);
     }
 }
+
+/**
+ * @description This function is used to delete a recipe by its ID.
+ * It sends a DELETE request to the server with the recipe ID and the user's language preference.
+ * @param {int} recipeId
+ * @returns
+ */
+export const deleteRecipe = async (recipeId) => {
+    try {
+        const lang = localStorage.getItem('i18nextLng') || 'es';
+        await withCSRF();
+        const { data } = await instance.delete(`/api/recipes/${recipeId}`, {
+            withCredentials: true,
+            withXSRFToken: true,
+            headers: { 'Content-Type': 'application/json' },
+            lang,
+        });
+        notifyService.success(data.message, { duration: 4000 });
+        return data;
+    } catch (error) {
+        notifyService.error(error.response.data.message, { duration: 2000 });
+        return (error.response.data);
+    }
+}
