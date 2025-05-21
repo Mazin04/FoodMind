@@ -6,7 +6,7 @@ const RecipeDescriptionInput = ({
     errors, 
     t, 
     language, 
-    maxLength = 100 
+    maxLength = 200 
 }) => {
     const isSpanish = language === 'es';
     const name = isSpanish ? 'recipeDescriptionSpanish' : 'recipeDescriptionEnglish';

@@ -164,3 +164,19 @@ export const deleteRecipe = async (recipeId) => {
         return (error.response.data);
     }
 }
+
+export const getRecipeTypes = async () => {
+    try {
+        const lang = localStorage.getItem('i18nextLng') || 'es';
+        const { data } = await instance.post('/api/recipes/types', {
+            withCredentials: true,
+            withXSRFToken: true,
+            headers: { 'Content-Type': 'application/json' },
+            params: { lang },
+        });
+        return data;
+    } catch (error) {
+        notifyService.error(error.response.data.message, { duration: 2000 });
+        return (error.response.data);
+    }
+}

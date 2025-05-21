@@ -15,7 +15,7 @@ const RecipeNameInput = ({ register, errors, t, language, maxLength = 50 }) => {
                 className={`flex items-center border rounded-lg overflow-hidden shadow-sm transition focus-within:ring-2 focus-within:ring-blue-500 
                 ${errors?.[name] ? 'border-red-500' : 'border-gray-300 dark:border-neutral-600'} bg-white dark:bg-neutral-800`}
             >
-                <div className="flex items-center h-full px-3 border-r">
+                <div className="min-w-[40px] flex flex-col items-center justify-center px-3 py-3 border-r bg-gray-100 dark:bg-neutral-700">
                     <ReactCountryFlag countryCode={flagCode} svg style={{ width: '1.25em', height: '1.35em' }} />
                 </div>
                 <InputText
