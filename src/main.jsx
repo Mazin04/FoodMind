@@ -9,6 +9,7 @@ import Profile from '@/app/pages/Profile'
 import Settings from '@/app/pages/Settings'
 import Pantry from '@/features/pantry/pages/Pantry'
 import RecipeDetails from '@/features/recipes/pages/RecipeDetails'
+import CreateRecipe from '@/features/recipes/pages/CreateRecipe'
 import PageLoader from '@/shared/components/PageLoader'
 
 import { ThemeProvider } from '@/shared/context/ThemeContext'
@@ -40,6 +41,7 @@ createRoot(document.getElementById('root')).render(
                 <Route path={URLS.SETTINGS} element={<Settings />} />
                 <Route path={URLS.PANTRY} element={<Pantry />} />
                 <Route path={URLS.RECIPE_DETAILS} element={<RecipeDetails />} />
+                <Route path={URLS.CREATE_RECIPE} element={<CreateRecipe />} />
               </Route>
             </Route>
             <Route path="*" element={<Navigate to={URLS.MAIN} replace />} />

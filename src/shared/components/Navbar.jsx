@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { useTheme } from '@/shared/context/ThemeContext';
-import { House, DotsThree, User, Gear, Basket } from '@phosphor-icons/react';
+import { House, DotsThree, User, Gear, Basket, BookBookmark } from '@phosphor-icons/react';
 import { getUser } from '@/features/auth/services/authService';
 import { MoonLoader } from "react-spinners";
 
@@ -88,6 +88,19 @@ function Navbar() {
                             size={25}
                             color={isDarkMode ? "#fff" : "#000"}
                             weight={location.pathname === URLS.PANTRY ? "fill" : "bold"}
+                        />
+                    </button>
+                    {/* Recipes button */}
+                    <button
+                        className={`dark:bg-neutral-900 dark:hover:bg-neutral-800 hover:bg-stone-300 py-2 sm:p-5 rounded-full flex justify-center items-center cursor-pointer ${location.pathname === URLS.CREATE_RECIPE ? "font-bold" : ""}`}
+                        id='settings'
+                        onClick={() => redirectTo('CREATE_RECIPE')}
+                    >
+                        <p className='hidden xl:block mr-4'>{t('nav_create_recipe')}</p>
+                        <BookBookmark
+                            size={25}
+                            color={isDarkMode ? "#fff" : "#000"}
+                            weight={location.pathname === URLS.CREATE_RECIPE ? "fill" : "bold"}
                         />
                     </button>
                     {/* Settings button */}

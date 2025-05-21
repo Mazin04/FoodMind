@@ -16,7 +16,7 @@ function HomeLayout() {
             </div>
             <div className="hidden 2xl:flex w-full h-full basis-[25%] bg-stone-100 dark:bg-neutral-900 justify-center items-center">
                 {/* Side content */}
-                <div className="w-full h-full flex justify-center items-center bg-red-200">
+                <div className="w-full h-full flex justify-center items-center bg-red-500">
                 </div>
             </div>
         </div>

@@ -151,10 +151,10 @@ const RecipeDetails = () => {
     return (
         <>
             <div className="h-full w-full flex flex-col items-center justify-start text-neutral-900 dark:text-white">
-                <img src={image} alt={name || "Recipe"} className="w-full h-1/3 object-cover shadow-md shadow-blue-800 min-h-[200px] lg:min-h-[400px] rounded-b-sm not-draggable" />
+                <img src={image} alt={name || "Recipe"} className="w-full h-1/3 object-cover shadow-md shadow-black/80 dark:shadow-white/30 min-h-[200px] lg:min-h-[400px] rounded-b-sm not-draggable" />
 
                 {/* Head Section */}
-                <div className="flex flex-col lg:flex-row sm:items-center items-start space-y-2 sm:space-y-0 justify-between w-full p-4">
+                <div className="flex flex-col lg:flex-row sm:items-center items-start space-y-2 sm:space-y-3 lg:space-y-0 justify-between w-full p-4">
                     <h1 className="text-2xl font-bold w-full">{name.charAt(0).toUpperCase() + name.slice(1)}</h1>
                     <div className="w-full overflow-x-auto">
                         <div className="flex flex-row items-center lg:justify-end space-x-3 sm:space-x-4 min-h-14">

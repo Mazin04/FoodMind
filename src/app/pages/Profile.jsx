@@ -3,6 +3,7 @@ import { getUser, userRecipes, userFavorites as getUserFavorites } from "@/featu
 import { useTranslation } from "react-i18next";
 import useScrollHorizontal from "@/shared/lib/scrollHorizontal";
 import RecipeCard from "@/features/recipes/components/RecipeCard";
+import { Plus } from "@phosphor-icons/react";
 
 import bg from "@/assets/images/backgrounds/bg-2.png";
 import ContentLoader from "@/shared/components/ContentLoader.jsx";
@@ -155,7 +156,7 @@ const Profile = () => {
                             <ContentLoader />
                         </div>
                     ) : displayedRecipes.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full p-5 overflow-auto no-scrollbar">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full p-5 overflow-auto no-scrollbar relative">
                             {displayedRecipes.map((recipe) => (
                                 <RecipeCard recipe={recipe} key={recipe.id} />
                             ))}
