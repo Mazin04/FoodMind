@@ -94,6 +94,7 @@ const RecipeCard = ({ recipe }) => {
                 <img
                     src={image}
                     alt={name}
+                    loading="lazy"
                     className="w-full h-full object-cover rounded-t-lg not-draggable cursor-pointer"
                     onClick={handleClick}
                 />

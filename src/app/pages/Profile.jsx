@@ -20,6 +20,7 @@ const Profile = () => {
     const [currentMethodUserCreated, setCurrentMethodUserCreated] = useState(true);
     const [loading, setLoading] = useState(true);
     const [isSwitchingRecipes, setIsSwitchingRecipes] = useState(false);
+    const [bgLoaded, setBgLoaded] = useState(false);
 
 
     const [userCreatedRecipes, setUserCreatedRecipes] = useState([]);
@@ -53,6 +54,11 @@ const Profile = () => {
             } finally {
                 setLoading(false);
             }
+            const bgImage = new Image();
+            bgImage.src = bg;
+            bgImage.onload = () => {
+                setBgLoaded(true);
+            };
         }
 
         fetchData();
@@ -99,21 +105,24 @@ const Profile = () => {
             ) : (
                 <div className="h-full w-full flex flex-col items-center justify-start text-neutral-900 dark:text-white">
                     <div
-                        className="relative min-h-52 sm:h-72 md:h-84 w-full border-b-1 border-neutral-700 dark:border-neutral-500"
+                        className="relative min-h-52 sm:h-72 md:h-84 w-full border-b-1 border-neutral-700 dark:border-neutral-500 transition-opacity duration-700"
                         style={{
-                            backgroundImage: `url(${bg})`,
+                            backgroundImage: bgLoaded ? `url(${bg})` : "none",
                             backgroundSize: "cover",
                             backgroundPosition: "center",
                             backgroundRepeat: "no-repeat",
+                            opacity: bgLoaded ? 1 : 0,
                         }}
                     >
-                        <div className="absolute inset-0 bg-black/50" /> {/* Opcional overlay semitransparente */}
+
+                        <div className="absolute inset-0 bg-black/50" />
 
                         <div className="absolute bottom-[-25px] md:bottom-[-40px] left-5 md:left-10 z-20 w-20 h-20 md:w-32 md:h-32 rounded-full border-4 border-white bg-gray-200">
                             {!loading && finalAvatar && (
                                 <img
                                     src={finalAvatar}
                                     alt="Profile"
+                                    loading="lazy"
                                     className="w-full h-full rounded-full object-cover transition-opacity duration-500 opacity-0 not-draggable"
                                     onLoad={(e) => e.currentTarget.classList.remove("opacity-0")}
                                     onError={(e) => {
