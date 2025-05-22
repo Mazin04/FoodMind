@@ -38,3 +38,32 @@
   -ms-overflow-style: none; /* IE y Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+/* Estilos para navegadores WebKit (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 12px;         /* ancho vertical */
+  height: 12px;        /* alto horizontal */
+}
+
+/* Fondo de la barra (track) */
+::-webkit-scrollbar-track {
+  background: transparent; /* gris claro (#f3f4f6 para modo claro) */
+}
+
+/* Parte que se mueve (thumb) */
+::-webkit-scrollbar-thumb {
+  background-color: #252525; /* gris medio (#9ca3af) */
+  border-radius: 6px;
+  border: 3px solid #f3f4f6; /* espacio entre thumb y track */
+}
+
+/* Hover sobre el thumb */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #353535; /* gris oscuro (#6b7280) */
+}
+
+/* Firefox (scrollbar moderna) */
+* {
+  scrollbar-width: thin;              /* 'auto' o 'thin' */
+  scrollbar-color: #9ca3af transparent;   /* thumb color / track color */
+}

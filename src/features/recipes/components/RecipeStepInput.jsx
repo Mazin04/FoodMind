@@ -57,6 +57,12 @@ const RecipeStepInput = ({ index, register, errors, t, onRemove }) => {
                     </div>
                 </div>
             </div>
+
+            {errors?.steps?.[index]?.es && (
+                <span className="text-red-500 text-xs">
+                    {errors?.steps?.[index]?.es?.message || t('recipes.create.stepRequired')}
+                </span>
+            )}
         </div>
     );
 };

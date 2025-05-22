@@ -180,3 +180,21 @@ export const getRecipeTypes = async () => {
         return (error.response.data);
     }
 }
+
+export const createRecipe = async (formData) => {
+    try {
+        const lang = localStorage.getItem('i18nextLng') || 'es';
+        await withCSRF();
+        const { data } = await instance.post('/api/recipes', formData, {
+            withCredentials: true,
+            withXSRFToken: true,
+            headers: { 'Content-Type': 'multipart/form-data' },
+            params: { lang },
+        });
+        notifyService.success(data.message, { duration: 4000 });
+        return data;
+    } catch (error) {
+        notifyService.error(error.response.data.message, { duration: 2000 });
+        return (error.response.data);
+    }
+}

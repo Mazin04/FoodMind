@@ -64,7 +64,7 @@ const RecipeCard = ({ recipe }) => {
         }
     }
 
-    const handleFavoriteClick = async(e) => {
+    const handleFavoriteClick = async (e) => {
         e.stopPropagation();
         if (favorite) {
             try {
@@ -90,14 +90,19 @@ const RecipeCard = ({ recipe }) => {
         <div
             className="flex flex-col items-center justify-start w-full h-full bg-white dark:bg-neutral-800 rounded-lg shadow-md cursor-pointer max-h-[360px]"
         >
-            <div className="relative w-full h-48 cursor-default">
+            <div className="relative w-full h-115 overflow-hidden rounded-t-lg">
                 <img
                     src={image}
                     alt={name}
-                    className="w-full h-full object-cover rounded not-draggable cursor-pointer"
+                    className="w-full h-full object-cover rounded-t-lg not-draggable cursor-pointer"
                     onClick={handleClick}
                 />
-                <Heart size={30} weight={favorite ? 'fill' : 'duotone'} className="absolute top-2 left-2 text-red-500 cursor-pointer focus:outline-none" onClick={handleFavoriteClick} />
+                <Heart
+                    size={30}
+                    weight={favorite ? 'fill' : 'duotone'}
+                    className="absolute top-2 left-2 text-red-500 cursor-pointer focus:outline-none"
+                    onClick={handleFavoriteClick}
+                />
                 <span
                     id={`tooltip-${recipe.id}`}
                     className="absolute top-2 right-2 bg-blue-500/80 text-white text-sm font-semibold p-1 rounded-lg"
@@ -112,14 +117,18 @@ const RecipeCard = ({ recipe }) => {
                     content={tooltipLabel}
                 />
             </div>
-            <div className="flex flex-col items-start justify-start p-4 w-full" onClick={handleClick}>
-                <div className="flex items-center justify-between w-full mb-2">
-                    <h2 className="text-xl font-bold text-neutral-900 dark:text-white">{name}</h2>
-                    <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                        {stepsCount} {localStorage.getItem('i18nextLng') === 'es' ? 'pasos' : 'steps'}
-                    </span>
+
+            <div className="flex flex-col items-start justify-between p-4 w-full h-full" onClick={handleClick}>
+                <div className="flex flex-col items-start w-full">
+                    <div className="flex items-center justify-between w-full mb-2">
+                        <h2 className="text-xl font-bold text-neutral-900 dark:text-white">{name}</h2>
+                        <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                            {stepsCount} {localStorage.getItem('i18nextLng') === 'es' ? 'pasos' : 'steps'}
+                        </span>
+                    </div>
+                    <p className="text-sm text-neutral-700 dark:text-neutral-300 mb-2 text-justify leading-6">{description}</p>
                 </div>
-                <p className="text-sm text-neutral-700 dark:text-neutral-300 mb-2 text-justify leading-6">{description}</p>
+
                 <div className="flex w-full overflow-x-auto whitespace-nowrap space-x-2 mt-2">
                     {types.map((type, index) => (
                         <span
