@@ -98,8 +98,8 @@ const ProfileVisit = () => {
                         </div>
                     ) : (
                         <div className="h-max flex flex-col items-center justify-center mt-4 md:mt-6 xl:mt-8 w-full px-5 overflow-auto no-scrollbar space-y-2">
-                            <p className="text-lg font-bold">{t("profile.norecipescreated")}</p>
-                            <p className="text-sm text-gray-500">{t("profile.norecipescreateddesc")}</p>
+                            <p className="text-lg font-bold">{t("profilevisit.norecipescreated")}</p>
+                            <p className="text-sm text-gray-500">{t("profilevisit.norecipescreateddesc")}</p>
                         </div>
                     )}
                 </div>
