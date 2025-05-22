@@ -7,6 +7,7 @@ import { getRecipeTypes, createRecipe } from '@/features/recipes/services/recipe
 import ContentLoader from '@/shared/components/ContentLoader';
 import { Plus } from '@phosphor-icons/react';
 import { Checkbox } from '@headlessui/react'
+import URLS from '@/constants/urls';
 
 import RecipeNameInput from '../components/RecipeNameInput';
 import RecipeDescriptionInput from '../components/RecipeDescription';
@@ -131,6 +132,9 @@ const CreateRecipe = () => {
                 console.log(`${pair[0]}:`, pair[1]);
             }
             const response = await createRecipe(formData);
+            if (response.success) {
+                navigate(URLS.PROFILE);
+            }
         } catch (error) {
             console.error('Error creating recipe:', error);
         } finally {

@@ -1,7 +1,7 @@
 import { InputText } from 'primereact/inputtext';
 import { ReactCountryFlag } from 'react-country-flag';
 
-const RecipeNameInput = ({ register, errors, t, language, maxLength = 50 }) => {
+const RecipeNameInput = ({ register, errors, t, language, maxLength = 25 }) => {
     const isSpanish = language === 'es';
     const name = isSpanish ? 'recipeNameSpanish' : 'recipeNameEnglish';
     const placeholder = isSpanish

@@ -176,7 +176,7 @@ export const getRecipeTypes = async () => {
         });
         return data;
     } catch (error) {
-        notifyService.error(error.response.data.message, { duration: 2000 });
+        notifyService.error(error.response.data.message, { duration: 5000 });
         return (error.response.data);
     }
 }
@@ -191,10 +191,10 @@ export const createRecipe = async (formData) => {
             headers: { 'Content-Type': 'multipart/form-data' },
             params: { lang },
         });
-        notifyService.success(data.message, { duration: 4000 });
+        notifyService.success(data.success, { duration: 4000 });
         return data;
     } catch (error) {
-        notifyService.error(error.response.data.message, { duration: 2000 });
+        notifyService.error(error.response.data.message, { duration: 5000 });
         return (error.response.data);
     }
 }

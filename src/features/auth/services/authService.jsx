@@ -6,9 +6,9 @@ const withCSRF = async () => {
         await instance.get('/sanctum/csrf-cookie');
     } catch (error) {
         if (error.response && error.response.status === 401) {
-            notifyService.error("Session expired, please login again", { duration: 2000 });
+            notifyService.error("Session expired, please login again", { duration: 5000 });
         } else {
-            notifyService.error("Can't connect with the server", { duration: 2000 });
+            notifyService.error("Can't connect with the server", { duration: 5000 });
         }
         throw error;
     }
@@ -27,11 +27,11 @@ export const login = async (email, password) => {
         return await getUser();
     } catch (error) {
         if (error.response && error.response.status === 422) {
-            notifyService.error("Invalid credentials", { duration: 2000 });
+            notifyService.error("Invalid credentials", { duration: 5000 });
         } else if (error.response && error.response.status === 401) {
-            notifyService.error("Unauthorized", { duration: 2000 });
+            notifyService.error("Unauthorized", { duration: 5000 });
         } else {
-            notifyService.error("Can't connect with the server", { duration: 2000 });
+            notifyService.error("Can't connect with the server", { duration: 5000 });
         }
         throw error;
     }
@@ -46,9 +46,9 @@ export const isEmailRegistered = async (email) => {
         return data;
     } catch (error) {
         if (error.response && error.response.status === 422) {
-            notifyService.error("Email already registered", { duration: 2000 });
+            notifyService.error("Email already registered", { duration: 5000 });
         } else {
-            notifyService.error("Can't connect with the server", { duration: 2000 });
+            notifyService.error("Can't connect with the server", { duration: 5000 });
         }
         throw error;
     }
@@ -68,9 +68,9 @@ export const registerUser = async (name, email, password) => {
         return await login(email, password);
     } catch (error) {
         if (error.response && error.response.status === 422) {
-            notifyService.error("Email already registered", { duration: 2000 });
+            notifyService.error("Email already registered", { duration: 5000 });
         } else {
-            notifyService.error("Can't connect with the server", { duration: 2000 });
+            notifyService.error("Can't connect with the server", { duration: 5000 });
         }
         throw error;
     }
@@ -84,9 +84,9 @@ export const getUser = async (isMain) => {
     } catch (error) {
         if (!isMain) {
             if (error.response && error.response.status === 401) {
-                notifyService.error("Session expired, please login again", { duration: 2000 });
+                notifyService.error("Session expired, please login again", { duration: 5000 });
             } else {
-                notifyService.error("Can't connect with the server", { duration: 2000 });
+                notifyService.error("Can't connect with the server", { duration: 5000 });
             }
             throw error;
         }
@@ -98,7 +98,7 @@ export const logout = async () => {
         await withCSRF();
         await instance.get('/api/logout');
     } catch (error) {
-        notifyService.error("Can't connect with the server", { duration: 2000 });
+        notifyService.error("Can't connect with the server", { duration: 5000 });
         throw error;
     }
 }
@@ -116,9 +116,9 @@ export const userRecipes = async () => {
         return data;
     } catch (error) {
         if (error.response && error.response.status === 401) {
-            notifyService.error("Session expired, please login again", { duration: 2000 });
+            notifyService.error("Session expired, please login again", { duration: 5000 });
         } else {
-            notifyService.error("Can't connect with the server", { duration: 2000 });
+            notifyService.error("Can't connect with the server", { duration: 5000 });
         }
         throw error;
     }
@@ -137,9 +137,9 @@ export const userFavorites = async () => {
         return data;
     } catch (error) {
         if (error.response && error.response.status === 401) {
-            notifyService.error("Session expired, please login again", { duration: 2000 });
+            notifyService.error("Session expired, please login again", { duration: 5000 });
         } else {
-            notifyService.error("Can't connect with the server", { duration: 2000 });
+            notifyService.error("Can't connect with the server", { duration: 5000 });
         }
         throw error;
     }
@@ -158,9 +158,9 @@ export const getUserPantry = async () => {
         return data;
     } catch (error) {
         if (error.response && error.response.status === 401) {
-            notifyService.error("Session expired, please login again", { duration: 2000 });
+            notifyService.error("Session expired, please login again", { duration: 5000 });
         } else {
-            notifyService.error("Can't connect with the server", { duration: 2000 });
+            notifyService.error("Can't connect with the server", { duration: 5000 });
         }
         throw error;        
     }
@@ -179,7 +179,7 @@ export const deleteIngredientPantry = async (ingredientId) => {
         notifyService.success(data.message, { duration: 4000 });
         return data;
     } catch (error) {
-        notifyService.error(error.response.data.message, { duration: 2000 });        
+        notifyService.error(error.response.data.message, { duration: 5000 });        
     }
 }
 
@@ -196,7 +196,7 @@ export const cleanIngredientPantry = async () => {
         notifyService.success(data.message, { duration: 4000 });
         return data;    
     } catch (error) {
-        notifyService.error(error.response.data.message, { duration: 2000 });
+        notifyService.error(error.response.data.message, { duration: 5000 });
     }
 }
 
@@ -214,7 +214,7 @@ export const editIngredientPantry = async (ingredientId, newValues) => {
         notifyService.success(data.message, { duration: 4000 });
         return data;
     } catch (error) {
-        notifyService.error(error.response.data.message, { duration: 2000 })
+        notifyService.error(error.response.data.message, { duration: 5000 })
     }
 }
 
@@ -231,9 +231,9 @@ export const getIngredientList = async () => {
         return data;
     } catch (error) {
         if (error.response && error.response.status === 401) {
-            notifyService.error("Session expired, please login again", { duration: 2000 });
+            notifyService.error("Session expired, please login again", { duration: 5000 });
         } else {
-            notifyService.error("Can't connect with the server", { duration: 2000 });
+            notifyService.error("Can't connect with the server", { duration: 5000 });
         }
         throw error;
     }
@@ -253,7 +253,49 @@ export const addIngredientPantry = async (ingredient) => {
         notifyService.success(data.message, { duration: 4000 });
         return data;
     } catch (error) {
-        notifyService.error(error.response.data.message, { duration: 2000 });
+        notifyService.error(error.response.data.message, { duration: 5000 });
         console.error(error);
+    }
+}
+
+export const getPublicRecipesByUser = async (userId) => {
+    try {
+        const lang = localStorage.getItem('i18nextLng') || 'es';
+        await withCSRF();
+        const { data } = await instance.get(`/api/user/${userId}/public-recipes`, {
+            withCredentials: true,
+            withXSRFToken: true,
+            headers: { 'Content-Type': 'application/json' },
+            params: { lang },
+        });
+        return data;
+    } catch (error) {
+        if (error.response && error.response.status === 401) {
+            notifyService.error("Session expired, please login again", { duration: 5000 });
+        } else {
+            notifyService.error("Can't connect with the server", { duration: 5000 });
+        }
+        return error;
+    }
+}
+
+export const getUserById = async (userId) => {
+    try {
+        const lang = localStorage.getItem('i18nextLng') || 'es';
+        await withCSRF();
+        const { data } = await instance.get(`/api/user/${userId}`, {
+            withCredentials: true,
+            withXSRFToken: true,
+            headers: { 'Content-Type': 'application/json' },
+            params: { lang },
+        });
+        return data;
+    } catch (error) {
+        if (error.response && error.response.status === 401) {
+            notifyService.error("Session expired, please login again", { duration: 5000 });
+        } else {
+            notifyService.error("Can't connect with the server", { duration: 5000 });
+        }
+        return error;
     }
 }

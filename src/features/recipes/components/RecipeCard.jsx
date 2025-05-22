@@ -127,11 +127,14 @@ const RecipeCard = ({ recipe }) => {
                             {stepsCount} {localStorage.getItem('i18nextLng') === 'es' ? 'pasos' : 'steps'}
                         </span>
                     </div>
-                    <p className="text-sm text-neutral-700 dark:text-neutral-300 mb-2 text-justify leading-6">{description}</p>
+                    <p className="text-sm text-neutral-700 dark:text-neutral-300 mb-2 text-justify w-full leading-6 break-words line-clamp-3">
+                        {description}
+                    </p>
+
                 </div>
 
                 <div className="flex w-full overflow-x-auto whitespace-nowrap space-x-2 mt-2">
-                    {types.map((type, index) => (
+                    {Array.isArray(types) && types.map((type, index) => (
                         <span
                             key={index}
                             className="bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded-full items-center w-full text-center"

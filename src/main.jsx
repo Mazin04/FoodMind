@@ -6,6 +6,8 @@ import App from '@/app/App'
 import Home from '@/app/pages/Home'
 import HomeLayout from '@/app/layout/HomeLayout'
 import Profile from '@/app/pages/Profile'
+import ProfileVisit from '@/app/pages/ProfileVisit'
+
 import Settings from '@/app/pages/Settings'
 import Pantry from '@/features/pantry/pages/Pantry'
 import RecipeDetails from '@/features/recipes/pages/RecipeDetails'
@@ -38,6 +40,7 @@ createRoot(document.getElementById('root')).render(
               <Route element={<HomeLayout />}>
                 <Route path={URLS.HOME} element={<Home />} />
                 <Route path={URLS.PROFILE} element={<Profile />} />
+                <Route path={URLS.PROFILE_VISIT} element={<ProfileVisit />} />
                 <Route path={URLS.SETTINGS} element={<Settings />} />
                 <Route path={URLS.PANTRY} element={<Pantry />} />
                 <Route path={URLS.RECIPE_DETAILS} element={<RecipeDetails />} />

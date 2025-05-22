@@ -1,41 +1,34 @@
-import { useEffect, useState } from "react";
-import { getUser, userRecipes, userFavorites as getUserFavorites } from "@/features/auth/services/authService";
-import { useTranslation } from "react-i18next";
-import useScrollHorizontal from "@/shared/lib/scrollHorizontal";
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import useScrollHorizontal from '@/shared/lib/scrollHorizontal';
 import RecipeCard from "@/features/recipes/components/RecipeCard";
-
 import bg from "@/assets/images/backgrounds/bg-2.png";
 import ContentLoader from "@/shared/components/ContentLoader.jsx";
+import { getUserById, getPublicRecipesByUser } from '@/features/auth/services/authService';
 
-const Profile = () => {
+const ProfileVisit = () => {
     const { t } = useTranslation();
     const scrollRef = useScrollHorizontal();
+    const navigate = useNavigate();
+    const { id } = useParams();
 
     const [userName, setUserName] = useState("User");
     const [, setAvatar] = useState(null);
     const [date, setDate] = useState("");
     const [placeholder, setPlaceholder] = useState(null);
     const [finalAvatar, setFinalAvatar] = useState(null);
-    const [currentMethodUserCreated, setCurrentMethodUserCreated] = useState(true);
-    const [loading, setLoading] = useState(true);
-    const [isSwitchingRecipes, setIsSwitchingRecipes] = useState(false);
 
+    const [loading, setLoading] = useState(true);
 
     const [userCreatedRecipes, setUserCreatedRecipes] = useState([]);
-    const [userFavorites, setUserFavorites] = useState([]);
-
-    const displayedRecipes = Array.isArray(currentMethodUserCreated ? userCreatedRecipes : userFavorites)
-        ? (currentMethodUserCreated ? userCreatedRecipes : userFavorites)
-        : [];
 
     useEffect(() => {
-
         async function fetchData() {
             try {
-                const user = await getUser();
+                const user = await getUserById(id);
                 const placeholderUrl = `https://avatar.iran.liara.run/username?username=${user.name}`;
                 const avatarUrl = user.avatar && user.avatar.trim() !== "" ? user.avatar : null;
-
                 setUserName(user.name);
                 document.title = "Foodmind - " + user.name;
                 const options = { day: "2-digit", month: "short", year: "numeric" };
@@ -44,11 +37,11 @@ const Profile = () => {
                 setPlaceholder(placeholderUrl);
                 setAvatar(avatarUrl);
                 setFinalAvatar(avatarUrl || placeholderUrl);
-                const recipes = await userRecipes();
-                setUserCreatedRecipes(recipes);
-                setCurrentMethodUserCreated(true);
+                const recipes = await getPublicRecipesByUser(id);
+                setUserCreatedRecipes(Array.isArray(recipes) ? recipes : []);
+                console.log(recipes);
             } catch (error) {
-                console.error("Error fetching user data:", error);
+
             } finally {
                 setLoading(false);
             }
@@ -56,40 +49,6 @@ const Profile = () => {
 
         fetchData();
     }, []);
-
-    const fetchUserCreatedRecipes = async () => {
-        setIsSwitchingRecipes(true);
-        try {
-            const recipes = await userRecipes();
-            setUserCreatedRecipes(recipes);
-        } catch (error) {
-            console.error("Error fetching user created recipes:", error);
-        } finally {
-            setIsSwitchingRecipes(false);
-        }
-    };
-
-    const fetchUserFavorites = async () => {
-        setIsSwitchingRecipes(true);
-        try {
-            const favorites = await getUserFavorites();
-            setUserFavorites(favorites);
-        } catch (error) {
-            console.error("Error fetching user favorites:", error);
-        } finally {
-            setIsSwitchingRecipes(false);
-        }
-    };
-
-    const handleShowMyRecipes = async () => {
-        setCurrentMethodUserCreated(true);
-        await fetchUserCreatedRecipes();
-    };
-
-    const handleShowFavorites = async () => {
-        setCurrentMethodUserCreated(false);
-        await fetchUserFavorites();
-    };
 
     return (
         <>
@@ -131,55 +90,22 @@ const Profile = () => {
                             {date}
                         </p>
                     </div>
-                    <div className="flex flex-col items-start justify-center mt-8 md:mt-10 xl:mt-12 w-full">
-                        <div className="flex flex-row items-start justify-start md:justify-center w-full px-5 space-x-4 overflow-auto no-scrollbar" ref={scrollRef}>
-                            <h1
-                                className={`text-lg md:text-xl font-bold text-center cursor-pointer ${currentMethodUserCreated ? "border-b-2 border-blue-500" : "border-b-2 border-transparent"
-                                    }`}
-                                onClick={handleShowMyRecipes}
-                            >
-                                {t("profile.myrecipes")}
-                            </h1>
-                            <h1
-                                className={`text-lg md:text-xl font-bold text-center cursor-pointer ${!currentMethodUserCreated ? "border-b-2 border-blue-500" : "border-b-2 border-transparent"
-                                    }`}
-                                onClick={handleShowFavorites}
-                            >
-                                {t("profile.favoriterecipes")}
-                            </h1>
-                        </div>
-                        <hr className="w-full border-neutral-700 dark:border-neutral-500 mt-1.5" />
-                    </div>
-                    {isSwitchingRecipes ? (
-                        <div className="w-full h-124">
-                            <ContentLoader />
-                        </div>
-                    ) : displayedRecipes.length > 0 ? (
+                    {Array.isArray(userCreatedRecipes) && userCreatedRecipes.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full p-5 overflow-auto no-scrollbar relative">
-                            {displayedRecipes.map((recipe) => (
+                            {userCreatedRecipes.map((recipe) => (
                                 <RecipeCard recipe={recipe} key={recipe.id} />
                             ))}
                         </div>
                     ) : (
                         <div className="h-max flex flex-col items-center justify-center mt-4 md:mt-6 xl:mt-8 w-full px-5 overflow-auto no-scrollbar space-y-2">
-                            {currentMethodUserCreated ? (
-                                <>
-                                    <p className="text-lg font-bold">{t("profile.norecipescreated")}</p>
-                                    <p className="text-sm text-gray-500">{t("profile.norecipescreateddesc")}</p>
-                                </>
-                            ) : (
-                                <>
-                                    <p className="text-lg font-bold">{t("profile.nofavoriterecipes")}</p>
-                                    <p className="text-sm text-gray-500">{t("profile.nofavoriterecipesdesc")}</p>
-                                </>
-                            )}
+                            <p className="text-lg font-bold">{t("profile.norecipescreated")}</p>
+                            <p className="text-sm text-gray-500">{t("profile.norecipescreateddesc")}</p>
                         </div>
                     )}
-
                 </div>
             )}
         </>
-    );
+    )
 }
 
-export default Profile;
+export default ProfileVisit;
