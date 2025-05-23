@@ -39,7 +39,6 @@ const ProfileVisit = () => {
                 setFinalAvatar(avatarUrl || placeholderUrl);
                 const recipes = await getPublicRecipesByUser(id);
                 setUserCreatedRecipes(Array.isArray(recipes) ? recipes : []);
-                console.log(recipes);
             } catch (error) {
 
             } finally {

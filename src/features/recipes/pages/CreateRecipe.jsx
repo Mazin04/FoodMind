@@ -250,7 +250,6 @@ const CreateRecipe = () => {
                                 {t('recipes.create.types')}
                             </label>
 
-                            {/* TODO: Meter un multiselect */}
                             <Controller
                                 name='types'
                                 control={control}
