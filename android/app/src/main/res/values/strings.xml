@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">FoodMind</string>
+    <string name="title_activity_main">FoodMind</string>
+    <string name="package_name">com.foodmind.app</string>
+    <string name="custom_url_scheme">com.foodmind.app</string>
+</resources>

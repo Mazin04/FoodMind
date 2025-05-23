@@ -71,7 +71,6 @@ const RecipeDetails = () => {
                 setRecipe(data);
                 setFavorite(data.is_favourite);
                 setIsPrivate(data.is_private);
-                console.log("Recipe data:", data);
                 document.title = "Foodmind - " + data.name;
             } catch (error) {
                 console.error("Error fetching recipe:", error);
@@ -125,7 +124,6 @@ const RecipeDetails = () => {
     }
 
     const handleDeleteRecipe = async () => {
-        console.log("Deleting recipe...");
         setDeleteRecipeLoading(true);
         try {
             const result = await deleteRecipe(id);
