@@ -1,9 +1,14 @@
 import { t } from "i18next";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router";
 import { Heart } from "@phosphor-icons/react";
 import { Tooltip } from "react-tooltip";
 import { addRecipeToFavorites, removeRecipeFromFavorites } from "@/features/recipes/services/recipeService";
+import { FaExclamationCircle, FaLock } from "react-icons/fa";
+import { IoCloseSharp } from "react-icons/io5";
+import { IoIosWarning } from "react-icons/io";
+import { TiTick } from "react-icons/ti";
+import { GrStatusUnknown } from "react-icons/gr";
 
 const RecipeCard = ({ recipe }) => {
     const navigate = useNavigate();
@@ -14,6 +19,7 @@ const RecipeCard = ({ recipe }) => {
     const [stepsCount, setStepsCount] = useState(0);
     const [types, setTypes] = useState([]);
     const [favorite, setFavorite] = useState(false);
+    const [windowWidth, setWindowWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1024);
 
 
     useEffect(() => {
@@ -30,39 +36,25 @@ const RecipeCard = ({ recipe }) => {
         navigate(`/recipe/${recipe.id}`);
     };
 
-    const getMatchIcon = () => {
-        switch (ingredients_match) {
+    const getMatchIcon = (match, t) => {
+        const size = 24;
+        switch (match) {
             case "NO TIENE":
             case "MISSING":
-                return {
-                    icon: "❌",
-                    tooltipLabel: t('recipe_donthave'),
-                };
+                return { icon: <IoCloseSharp size={size} className="text-red-500" />, tooltipLabel: t('recipe_donthave') };
             case "UNIDADES DISTINTAS":
             case "DIFFERENT UNITS":
-                return {
-                    icon: "⚠️",
-                    tooltipLabel: t('recipe_differentunits')
-                };
+                return { icon: <IoIosWarning size={size} className="text-yellow-500" />, tooltipLabel: t('recipe_differentunits') };
             case "NO SUFICIENTE":
             case "NOT ENOUGH":
-                return {
-                    icon: "❗",
-                    tooltipLabel: t('recipe_notenough')
-                };
+                return { icon: <FaExclamationCircle size={size} className="text-orange-500" />, tooltipLabel: t('recipe_notenough') };
             case "PUEDE HACERLO":
             case "CAN MAKE":
-                return {
-                    icon: "✅",
-                    tooltipLabel: t('recipe_canmake')
-                };
+                return { icon: <TiTick size={size} className="text-green-500" />, tooltipLabel: t('recipe_canmake') };
             default:
-                return {
-                    icon: "❓",
-                    tooltipLabel: t('recipe_unknown')
-                };
+                return { icon: <GrStatusUnknown size={size} className="text-gray-500" />, tooltipLabel: t('recipe_unknown') };
         }
-    }
+    };
 
     const handleFavoriteClick = async (e) => {
         e.stopPropagation();
@@ -85,7 +77,10 @@ const RecipeCard = ({ recipe }) => {
         }
     }
 
-    const { icon, tooltipLabel } = getMatchIcon();
+    const { icon, tooltipLabel } = useMemo(() => {
+        return getMatchIcon(ingredients_match, t);
+    }, [ingredients_match, t]);
+
     return (
         <div
             className="flex flex-col items-center justify-start w-full h-full bg-white dark:bg-neutral-800 rounded-lg shadow-md cursor-pointer max-h-[360px]"
@@ -106,7 +101,7 @@ const RecipeCard = ({ recipe }) => {
                 />
                 <span
                     id={`tooltip-${recipe.id}`}
-                    className="absolute top-2 right-2 bg-blue-500/80 text-white text-sm font-semibold p-1 rounded-lg"
+                    className="absolute top-2 right-2 bg-black/80 text-white text-sm font-semibold p-1 rounded-full"
                 >
                     {icon}
                 </span>
@@ -117,6 +112,11 @@ const RecipeCard = ({ recipe }) => {
                     style={{ position: "absolute", zIndex: 9999 }}
                     content={tooltipLabel}
                 />
+                {recipe.is_private && (
+                    <div className="absolute left-2 bottom-2 w-fit h-fit p-2 rounded-full bg-white/80 dark:bg-neutral-800/80 shadow-md">
+                        <FaLock size={15} />
+                    </div>
+                )}
             </div>
 
             <div className="flex flex-col items-start justify-between p-4 w-full h-full" onClick={handleClick}>

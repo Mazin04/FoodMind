@@ -128,7 +128,7 @@ const RecipeDetails = () => {
         try {
             const result = await deleteRecipe(id);
             if (result && !result.error) {
-                navigate(URLS.HOME);
+                navigate(URLS.PROFILE);
             } else {
                 console.error("Error deleting recipe:", result.error);
             }

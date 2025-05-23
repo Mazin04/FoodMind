@@ -14,7 +14,7 @@ export default defineConfig({
       manifest: {
         name: 'Foodmind',
         short_name: 'Foodmind',
-        description: 'Foodmind is a social network for food lovers.',
+        description: 'Foodmind is a social network for those who need help with their food choices.',
         theme_color: '#ffffff',
         icons: [
           {

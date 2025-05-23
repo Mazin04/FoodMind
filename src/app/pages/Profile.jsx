@@ -98,7 +98,7 @@ const Profile = () => {
             ) : (
                 <div className="h-full w-full flex flex-col items-center justify-start text-neutral-900 dark:text-white">
                     <div
-                        className="relative min-h-52 sm:min-h-72 md:min-h-84 w-full border-b-1 border-neutral-700 dark:border-neutral-500 mb-6 sm:mb-8 lg:mb-10 xl:mb-12"
+                        className="relative min-h-52 sm:min-h-72 md:min-h-84 w-full border-b-1 border-neutral-700 dark:border-neutral-500 mb-4"
                         style={{
                             backgroundImage: `url(${bg})`,
                             backgroundSize: "cover",
