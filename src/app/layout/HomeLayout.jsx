@@ -1,12 +1,13 @@
 import Navbar from '@/shared/components/Navbar';
 import { Outlet } from 'react-router';
-import MockAd from '../../shared/components/MockAd';
+import MockAd from '@/shared/components/MockAd';
+import NavbarSmall from '@/shared/components/NavbarSmall';
 
 function HomeLayout() {
 
     return (
-        <div className="w-full h-screen bg-stone-100 dark:bg-neutral-900 flex">
-            <div className="min-w-[70px] sm:basis-[90px] xl:basis-[20%] 2xl:basis-[25%] flex-shrink-0">
+        <div className="w-full h-screen flex flex-col sm:flex-row">
+            <div className="min-w-[70px] hidden sm:block sm:basis-[90px] xl:basis-[20%] 2xl:basis-[25%] flex-shrink-0">
                 <Navbar />
             </div>
 
@@ -20,6 +21,11 @@ function HomeLayout() {
                 <div className="w-full h-full flex-1 bg-stone-100 dark:bg-neutral-900 flex justify-center items-center border-l-1 border-neutral-700">
                     <MockAd height="50%" width="80%" />
                 </div>
+            </div>
+
+            {/* Navbar at the bottom for small screens */}
+            <div className="block sm:hidden w-full h-[70px] border-t border-neutral-700">
+                <NavbarSmall />
             </div>
         </div>
     );
