@@ -98,7 +98,7 @@ const Profile = () => {
             ) : (
                 <div className="h-full w-full flex flex-col items-center justify-start text-neutral-900 dark:text-white">
                     <div
-                        className="relative min-h-52 sm:min-h-72 md:min-h-84 w-full border-b-1 border-neutral-700 dark:border-neutral-500 mb-4"
+                        className="relative min-h-32 sm:min-h-72 md:min-h-84 w-full border-b-1 border-neutral-700 dark:border-neutral-500 mb-4"
                         style={{
                             backgroundImage: `url(${bg})`,
                             backgroundSize: "cover",
@@ -132,7 +132,7 @@ const Profile = () => {
                         </p>
                     </div>
                     <div className="flex flex-col items-start justify-center mt-8 md:mt-10 xl:mt-12 w-full">
-                        <div className="flex flex-row items-start justify-start md:justify-center w-full px-5 space-x-4 overflow-auto no-scrollbar" ref={scrollRef}>
+                        <div id="tabs" className="flex flex-row items-start justify-start md:justify-center w-full px-5 space-x-4 overflow-auto no-scrollbar" ref={scrollRef}>
                             <h1
                                 className={`text-lg md:text-xl font-bold text-center cursor-pointer ${currentMethodUserCreated ? "border-b-2 border-blue-500" : "border-b-2 border-transparent"
                                     }`}
