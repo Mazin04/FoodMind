@@ -71,6 +71,8 @@ const RecipeDetails = () => {
                 setRecipe(data);
                 setFavorite(data.is_favourite);
                 setIsPrivate(data.is_private);
+                console.log("Recipe data:", data);
+                document.title = "Foodmind - " + data.name;
             } catch (error) {
                 console.error("Error fetching recipe:", error);
             } finally {
@@ -155,7 +157,13 @@ const RecipeDetails = () => {
 
                 {/* Head Section */}
                 <div className="flex flex-col lg:flex-row sm:items-center items-start space-y-2 sm:space-y-3 lg:space-y-0 justify-between w-full p-4">
-                    <h1 className="text-2xl font-bold w-full">{name.charAt(0).toUpperCase() + name.slice(1)}</h1>
+                    <div className="flex flex-col items-start space-y-2 w-full">
+                        <h1 className="text-2xl font-bold w-full">{name.charAt(0).toUpperCase() + name.slice(1)}</h1>
+                        <h2 className="text-sm font-semibold text-neutral-500 dark:text-neutral-400 cursor-pointer hover:underline underline-offset-2"
+                            onClick={() => navigate(`/profile/${recipe.creator.id}`)}>
+                            {t('created_by')} {recipe.creator.name.charAt(0).toUpperCase() + recipe.creator.name.slice(1)}
+                        </h2>
+                    </div>
                     <div className="w-full overflow-x-auto">
                         <div className="flex flex-row items-center lg:justify-end space-x-3 sm:space-x-4 min-h-14">
                             <button id={`tooltip-${id}`} className="p-2 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition">
