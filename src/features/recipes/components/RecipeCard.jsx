@@ -19,6 +19,7 @@ const RecipeCard = ({ recipe }) => {
     const [stepsCount, setStepsCount] = useState(0);
     const [types, setTypes] = useState([]);
     const [favorite, setFavorite] = useState(false);
+    const [hasError, setHasError] = useState(false);
 
 
     useEffect(() => {
@@ -26,9 +27,11 @@ const RecipeCard = ({ recipe }) => {
         setDescription(recipe.description);
         setFavorite(recipe.is_favourite);
         setImage(recipe.image);
+        console.log("Recipe image:", recipe.image);
         setIngredientsMatch(recipe.ingredients_match);
         setStepsCount(recipe.steps_count);
         setTypes(recipe.types);
+        setHasError(false);
     }, [recipe]);
 
     const handleClick = () => {
@@ -85,13 +88,23 @@ const RecipeCard = ({ recipe }) => {
             className="flex flex-col items-center justify-start w-full h-full bg-white dark:bg-neutral-800 rounded-lg shadow-md cursor-pointer max-h-[360px]"
         >
             <div className="relative w-full h-115 overflow-hidden rounded-t-lg">
-                <img
-                    src={image}
-                    alt={name}
-                    loading="lazy"
-                    className="w-full h-full object-cover rounded-t-lg not-draggable cursor-pointer"
-                    onClick={handleClick}
-                />
+                {recipe.image !== null ? (
+                    <img
+                        src={image}
+                        alt={name}
+                        loading="lazy"
+                        className="w-full h-full object-cover rounded-t-lg not-draggable cursor-pointer"
+                        onClick={handleClick}
+                        onError={() => setHasError(true)}
+                    />
+                ) : (
+                    <div
+                        className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-600 text-lg font-semibold text-center p-4 rounded-t-lg"
+                        onClick={handleClick}
+                    >
+                        {name}
+                    </div>
+                )}
                 <Heart
                     size={30}
                     weight={favorite ? 'fill' : 'duotone'}
@@ -113,7 +126,7 @@ const RecipeCard = ({ recipe }) => {
                 />
                 {recipe.is_private && (
                     <div className="absolute left-2 bottom-2 w-fit h-fit p-2 rounded-full bg-white/80 dark:bg-neutral-800/80 shadow-md">
-                        <FaLock size={15} className="text-white"/>
+                        <FaLock size={15} className="text-white" />
                     </div>
                 )}
             </div>
