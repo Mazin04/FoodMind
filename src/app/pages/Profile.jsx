@@ -151,7 +151,7 @@ const Profile = () => {
                         <hr className="w-full border-neutral-700 dark:border-neutral-500 mt-1.5" />
                     </div>
                     {isSwitchingRecipes ? (
-                        <div className="w-full h-124">
+                        <div className="w-full h-full">
                             <ContentLoader />
                         </div>
                     ) : displayedRecipes.length > 0 ? (

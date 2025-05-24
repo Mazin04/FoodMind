@@ -125,7 +125,7 @@ const Pantry = () => {
             <ContentLoader />
         ) : (
             <div className="flex flex-col items-center justify-center h-screen w-full p-2 md:p-4">
-                <div className="w-full h-full rounded-lg p-4 xl:p-6 2xl:p-8 bg-stone-50 dark:bg-neutral-800 shadow-md">
+                <div className="w-full h-full rounded-lg p-4 xl:p-6 bg-stone-50 dark:bg-neutral-800 shadow-md">
                     <PantryHeaderButtons
                         pantryLength={userPantry.length}
                         addIngredientLoading={addIngredientLoading}
@@ -152,7 +152,7 @@ const Pantry = () => {
                         )}
                         {/* Pantry items */}
                         {Array.isArray(userPantry) && userPantry.length > 0 ? (
-                            <ul className="w-full divide-y dark:divide-gray-200 overflow-y-auto mb-12">
+                            <ul className="w-full divide-y dark:divide-gray-200 overflow-y-auto">
                                 {filteredPantry.map((item) => (
                                     <IngredientItem
                                         key={item.ingredient_id}

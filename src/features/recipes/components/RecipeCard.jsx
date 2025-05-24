@@ -19,7 +19,6 @@ const RecipeCard = ({ recipe }) => {
     const [stepsCount, setStepsCount] = useState(0);
     const [types, setTypes] = useState([]);
     const [favorite, setFavorite] = useState(false);
-    const [windowWidth, setWindowWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1024);
 
 
     useEffect(() => {
@@ -114,7 +113,7 @@ const RecipeCard = ({ recipe }) => {
                 />
                 {recipe.is_private && (
                     <div className="absolute left-2 bottom-2 w-fit h-fit p-2 rounded-full bg-white/80 dark:bg-neutral-800/80 shadow-md">
-                        <FaLock size={15} />
+                        <FaLock size={15} className="text-white"/>
                     </div>
                 )}
             </div>
@@ -133,7 +132,7 @@ const RecipeCard = ({ recipe }) => {
 
                 </div>
 
-                <div className="flex w-full overflow-x-auto whitespace-nowrap space-x-2 mt-2">
+                <div className="flex w-full overflow-x-auto no-scrollbar whitespace-nowrap space-x-2 mt-2">
                     {Array.isArray(types) && types.map((type, index) => (
                         <span
                             key={index}

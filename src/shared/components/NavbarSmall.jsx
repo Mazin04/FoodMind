@@ -16,27 +16,6 @@ const NavbarSmall = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const [avatar, setAvatar] = useState(null);
-    const [placeholder, setPlaceholder] = useState(null);
-    const [userName, setUserName] = useState('User');
-
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const user = await getUser();
-
-                const placeholderUrl = `https://avatar.iran.liara.run/username?username=${user.name}`;
-                setUserName(user.name);
-                setPlaceholder(placeholderUrl);
-                setAvatar(user.avatar || placeholderUrl);
-            } catch (error) {
-                console.error("Error fetching user data:", error);
-            }
-        }
-
-        fetchData();
-    }, []);
-
     const redirectTo = (id) => {
         navigate(URLS[id]);
     }

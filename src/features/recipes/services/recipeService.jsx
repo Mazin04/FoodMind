@@ -198,3 +198,19 @@ export const createRecipe = async (formData) => {
         return (error.response.data);
     }
 }
+
+export const getPublicRecipes = async (page = 1, perPage = 21) => {
+    try {
+        const lang = localStorage.getItem('i18nextLng') || 'es';
+        const { data } = await instance.post('/api/recipes/available', {
+            withCredentials: true,
+            withXSRFToken: true,
+            headers: { 'Content-Type': 'application/json' },
+            params: { page, perPage, lang },
+        });
+        return data;
+    } catch (error) {
+        notifyService.error(error.response.data.message, { duration: 5000 });
+        return (error.response.data);
+    }
+}
