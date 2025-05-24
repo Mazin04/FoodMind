@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import RecipeCard from '@/features/recipes/components/RecipeCard';
 import ContentLoader from '@/shared/components/ContentLoader.jsx';
 import { getPublicRecipes } from '@/features/recipes/services/recipeService';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const Home = () => {
     const { t } = useTranslation();
@@ -10,40 +11,28 @@ const Home = () => {
     const [recipes, setRecipes] = useState([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
-
+    const [currentPage, setCurrentPage] = useState(1);
     const perPage = 21;
 
-    const fetchRecipes = useCallback(async () => {
-        if (loading || !hasMore) return;
-        setLoading(true);
-        try {
-            const data = await getPublicRecipes(page, perPage);
-            if (data?.data?.length === 0) {
-                setHasMore(false);
-            } else {
-                setRecipes(prev => [...prev, ...data.data]);
-                setPage(prev => prev + 1);
-            }
-        } catch (error) {
-            console.error('Error loading recipes:', error);
-        } finally {
-            setLoading(false);
-        }
-    }, [page, loading, hasMore]);
-
     useEffect(() => {
-        fetchRecipes();
-    }, []);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200 && !loading && hasMore) {
-                fetchRecipes();
+        document.title = "Foodmind - " + t('home.title');
+        const firstFetch = async () => {
+            setLoading(true);
+            try {
+                const response = await getPublicRecipes(1, perPage);
+                setRecipes(response.data);
+                setCurrentPage(response.current_page);
+                setHasMore(response.current_page < response.last_page);
+            } catch (error) {
+                console.error("Error fetching initial recipes:", error);
+            } finally {
+                setLoading(false);
             }
         };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [fetchRecipes, loading, hasMore]);
+
+        firstFetch();
+    }, []);
+
 
     return (
         <div className="flex flex-col items-start justify-start w-full h-full">
@@ -68,18 +57,41 @@ const Home = () => {
                 />
             </div>
 
-            <div id='recipeGrid' className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full p-5 overflow-auto">
-                {recipes.map((recipe) => (
-                    <RecipeCard recipe={recipe} key={recipe.id} />
-                ))}
-            </div>
+            <div id='recipeGrid' className="w-full p-5 overflow-auto">
+                <InfiniteScroll
+                    dataLength={recipes.length}
+                    scrollableTarget="recipeGrid"
+                    style={{ overflow: 'hidden' }}
+                    next={async () => {
+                        if (hasMore) {
+                            try {
+                                const nextPage = currentPage + 1;
+                                const response = await getPublicRecipes(nextPage, perPage);
+                                setRecipes((prevRecipes) => [...prevRecipes, ...response.data]);
+                                setCurrentPage(response.current_page);
+                                setHasMore(response.current_page < response.last_page);
+                            } catch (error) {
+                                console.error("Error fetching more recipes:", error);
+                            }
+                        }
+                    }}
+                    hasMore={hasMore}
+                    loader={<ContentLoader />}
+                    endMessage={
+                        <p className="text-center text-gray-500 dark:text-gray-400 p-4">
+                            {t('home.endMessage')}
+                        </p>
+                    }
+                >
 
-            {/* Loader at bottom while fetching first batch of recipes */}
-            {loading && (
-                <div className="w-full flex items-center justify-center py-4">
-                    <ContentLoader />
-                </div>
-            )}
+                    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full'>
+                        {/* Render recipes */}
+                        {recipes.map((recipe) => (
+                            <RecipeCard recipe={recipe} key={recipe.id} />
+                        ))}
+                    </div>
+                </InfiniteScroll>
+            </div>
         </div>
     );
 };

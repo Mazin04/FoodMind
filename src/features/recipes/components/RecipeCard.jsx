@@ -27,7 +27,6 @@ const RecipeCard = ({ recipe }) => {
         setDescription(recipe.description);
         setFavorite(recipe.is_favourite);
         setImage(recipe.image);
-        console.log("Recipe image:", recipe.image);
         setIngredientsMatch(recipe.ingredients_match);
         setStepsCount(recipe.steps_count);
         setTypes(recipe.types);
