@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import RecipeCard from '@/features/recipes/components/RecipeCard';
 import ContentLoader from '@/shared/components/ContentLoader.jsx';
-import { getPublicRecipes } from '@/features/recipes/services/recipeService';
+import { getPublicRecipes, getRecipesByName } from '@/features/recipes/services/recipeService';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { debounce, set } from 'lodash';
+import { debounce } from 'lodash';
 
 const Home = () => {
     const { t } = useTranslation();
@@ -42,9 +42,8 @@ const Home = () => {
     const fetchRecipes = async (page, searchTerm = '') => {
         try {
             var response;
-            if (!searchTerm.trim() === '') {
-                // If search term is empty, fetch all public recipes that can be done by the user
-                console.log("buscando recetas sin filtro");
+            if (searchTerm.trim() !== '') {
+                response = await getRecipesByName(searchTerm, page, perPage);
             } else {
                 response = await getPublicRecipes(page, perPage, searchTerm);
             }

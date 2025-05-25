@@ -216,3 +216,22 @@ export const getPublicRecipes = async (page, perPage = 21) => {
         return (error.response.data);
     }
 }
+
+export const getRecipesByName = async (name, page, perPage = 21) => {
+    try {
+        const lang = localStorage.getItem('i18nextLng') || 'es';
+        const { data } = await instance.post('/api/recipes/byName', {
+            withCredentials: true,
+            withXSRFToken: true,
+            headers: { 'Content-Type': 'application/json' },
+            name,
+            page,
+            perPage,
+            lang,
+        });
+        return data;
+    } catch (error) {
+        notifyService.error(error.response.data.message, { duration: 5000 });
+        return (error.response.data);
+    }
+}
