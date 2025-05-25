@@ -2,7 +2,6 @@ import Navbar from '@/shared/components/Navbar';
 import { Outlet } from 'react-router';
 import MockAd from '@/shared/components/MockAd';
 import NavbarSmall from '@/shared/components/NavbarSmall';
-
 function HomeLayout() {
 
     return (
