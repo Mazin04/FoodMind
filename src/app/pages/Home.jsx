@@ -45,7 +45,7 @@ const Home = () => {
             if (searchTerm.trim() !== '') {
                 response = await getRecipesByName(searchTerm, page, perPage);
             } else {
-                response = await getPublicRecipes(page, perPage, searchTerm);
+                response = await getPublicRecipes(page, perPage);
             }
             if (page === 1) {
                 setRecipes(response.data);
@@ -101,35 +101,44 @@ const Home = () => {
             </div>
 
             <div id='recipeGrid' className="w-full p-5 overflow-auto">
-                <InfiniteScroll
-                    dataLength={recipes.length}
-                    scrollableTarget="recipeGrid"
-                    style={{ overflow: 'hidden' }}
-                    next={async () => {
-                        if (!hasMore) return;
-                        try {
-                            await fetchRecipes(currentPage + 1, debouncedSearchTerm);
-                        } catch (error) {
-                            console.error("Error fetching more recipes:", error);
-                        }
-                    }}
-                    hasMore={hasMore}
-                    loader={<div className='p-12'><ContentLoader /></div>}
-                    endMessage={
-                        <p className="text-center text-gray-500 dark:text-gray-400 p-4">
-                            {t('home.endMessage')}
+                {recipes?.length === 0 && debouncedSearchTerm ? (
+                    <div className="flex items-center justify-center h-full">
+                        <p className="text-gray-500 dark:text-gray-400">
+                            {t('home.noResults')}
                         </p>
-                    }
-                >
-
-                    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full'>
-                        {/* Render recipes */}
-                        {recipes.map((recipe) => (
-                            <RecipeCard recipe={recipe} key={recipe.id} />
-                        ))}
-
                     </div>
-                </InfiniteScroll>
+                ) : (
+                    <InfiniteScroll
+                        dataLength={recipes?.length}
+                        scrollableTarget="recipeGrid"
+                        style={{ overflow: 'hidden' }}
+                        next={async () => {
+                            if (!hasMore) return;
+                            try {
+                                await fetchRecipes(currentPage + 1, debouncedSearchTerm);
+                            } catch (error) {
+                                console.error("Error fetching more recipes:", error);
+                            }
+                        }}
+                        hasMore={hasMore}
+                        loader={<div className='p-12'><ContentLoader /></div>}
+                        endMessage={
+                            <p className="text-center text-gray-500 dark:text-gray-400 p-4">
+                                {t('home.endMessage')}
+                            </p>
+                        }
+                    >
+
+                        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full'>
+                            {/* Render recipes */}
+                            {recipes.map((recipe) => (
+                                <RecipeCard recipe={recipe} key={recipe.id} />
+                            ))}
+
+                        </div>
+                    </InfiniteScroll>
+                )}
+
             </div>
         </div>
     );
