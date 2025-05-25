@@ -6,6 +6,7 @@ import RecipeCard from "@/features/recipes/components/RecipeCard";
 
 import bg from "@/assets/images/backgrounds/bg-2.png";
 import ContentLoader from "@/shared/components/ContentLoader.jsx";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const Profile = () => {
     const { t } = useTranslation();
@@ -18,8 +19,13 @@ const Profile = () => {
     const [finalAvatar, setFinalAvatar] = useState(null);
     const [currentMethodUserCreated, setCurrentMethodUserCreated] = useState(true);
     const [loading, setLoading] = useState(true);
-    const [isSwitchingRecipes, setIsSwitchingRecipes] = useState(false);
+    const [tabLoading, setTabLoading] = useState(false);
 
+    const [hasMoreCreated, setHasMoreCreated] = useState(true);
+    const [hasMoreFavorites, setHasMoreFavorites] = useState(true);
+    const [currentPageCreated, setCurrentPageCreated] = useState(1);
+    const [currentPageFavorites, setCurrentPageFavorites] = useState(1);
+    const perPage = 12;
 
     const [userCreatedRecipes, setUserCreatedRecipes] = useState([]);
     const [userFavorites, setUserFavorites] = useState([]);
@@ -44,9 +50,8 @@ const Profile = () => {
                 setPlaceholder(placeholderUrl);
                 setAvatar(avatarUrl);
                 setFinalAvatar(avatarUrl || placeholderUrl);
-                const recipes = await userRecipes();
-                setUserCreatedRecipes(recipes);
                 setCurrentMethodUserCreated(true);
+                await fetchUserCreatedRecipes(1);
             } catch (error) {
                 console.error("Error fetching user data:", error);
             } finally {
@@ -57,39 +62,58 @@ const Profile = () => {
         fetchData();
     }, []);
 
-    const fetchUserCreatedRecipes = async () => {
-        setIsSwitchingRecipes(true);
+    const fetchUserCreatedRecipes = async (page) => {
         try {
-            const recipes = await userRecipes();
-            setUserCreatedRecipes(recipes);
+            var response;
+            response = await userRecipes(page, perPage);
+            if (page === 1) {
+                setUserCreatedRecipes(response.data);
+            } else {
+                setUserCreatedRecipes((prevRecipes) => [...prevRecipes, ...response.data]);
+            }
+            setCurrentPageCreated(response.current_page);
+            setHasMoreCreated(response.current_page < response.last_page);
         } catch (error) {
             console.error("Error fetching user created recipes:", error);
-        } finally {
-            setIsSwitchingRecipes(false);
         }
     };
 
-    const fetchUserFavorites = async () => {
-        setIsSwitchingRecipes(true);
+    const fetchUserFavorites = async (page) => {
         try {
-            const favorites = await getUserFavorites();
-            setUserFavorites(favorites);
+            var response;
+            response = await getUserFavorites(page, perPage);
+            if (page === 1) {
+                setUserFavorites(response.data);
+            } else {
+                setUserFavorites((prevFavorites) => [...prevFavorites, ...response.data]);
+            }
+            setCurrentPageFavorites(response.current_page);
+            setHasMoreFavorites(response.current_page < response.last_page);
         } catch (error) {
             console.error("Error fetching user favorites:", error);
-        } finally {
-            setIsSwitchingRecipes(false);
         }
     };
 
     const handleShowMyRecipes = async () => {
+        setTabLoading(true);
         setCurrentMethodUserCreated(true);
-        await fetchUserCreatedRecipes();
+        setUserCreatedRecipes([]);
+        setCurrentPageCreated(1);
+        setHasMoreCreated(true);
+        await fetchUserCreatedRecipes(1);
+        setTabLoading(false);
     };
 
     const handleShowFavorites = async () => {
+        setTabLoading(true);
         setCurrentMethodUserCreated(false);
-        await fetchUserFavorites();
+        setUserFavorites([]);
+        setCurrentPageFavorites(1);
+        setHasMoreFavorites(true);
+        await fetchUserFavorites(1);
+        setTabLoading(false);
     };
+
 
     return (
         <>
@@ -150,32 +174,72 @@ const Profile = () => {
                         </div>
                         <hr className="w-full border-neutral-700 dark:border-neutral-500 mt-1.5" />
                     </div>
-                    {isSwitchingRecipes ? (
-                        <div className="w-full h-full">
-                            <ContentLoader />
-                        </div>
-                    ) : displayedRecipes.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full p-5 overflow-auto no-scrollbar relative">
-                            {displayedRecipes.map((recipe) => (
-                                <RecipeCard recipe={recipe} key={recipe.id} />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="h-max flex flex-col items-center justify-center mt-4 md:mt-6 xl:mt-8 w-full px-5 overflow-auto no-scrollbar space-y-2">
-                            {currentMethodUserCreated ? (
-                                <>
-                                    <p className="text-lg font-bold">{t("profile.norecipescreated")}</p>
-                                    <p className="text-sm text-gray-500">{t("profile.norecipescreateddesc")}</p>
-                                </>
-                            ) : (
-                                <>
-                                    <p className="text-lg font-bold">{t("profile.nofavoriterecipes")}</p>
-                                    <p className="text-sm text-gray-500">{t("profile.nofavoriterecipesdesc")}</p>
-                                </>
-                            )}
-                        </div>
-                    )}
-
+                    <div id="recipeGrid" className="w-full overflow-auto no-scrollbar">
+                        {tabLoading ? (
+                            <div className="p-12 w-full flex justify-center">
+                                <ContentLoader />
+                            </div>
+                        ) : displayedRecipes.length !== 0 ? (
+                            <InfiniteScroll
+                                dataLength={displayedRecipes.length}
+                                scrollableTarget="recipeGrid"
+                                style={{ overflow: 'hidden' }}
+                                next={async () => {
+                                    if (currentMethodUserCreated) {
+                                        if (!hasMoreCreated) return;
+                                        try {
+                                            await fetchUserCreatedRecipes(currentPageCreated + 1);
+                                        } catch (error) {
+                                            console.error("Error fetching more created recipes:", error);
+                                        }
+                                    } else {
+                                        if (!hasMoreFavorites) return;
+                                        try {
+                                            await fetchUserFavorites(currentPageFavorites + 1);
+                                        } catch (error) {
+                                            console.error("Error fetching more favorite recipes:", error);
+                                        }
+                                    }
+                                }}
+                                hasMore={currentMethodUserCreated ? hasMoreCreated : hasMoreFavorites}
+                                loader={
+                                    <>
+                                        <div className='p-12'><ContentLoader /></div>
+                                        {hasMoreCreated || hasMoreFavorites ? (
+                                            <p className="text-center text-gray-500 dark:text-gray-400 p-4">
+                                                {t('home.loadingMore')}
+                                            </p>
+                                        ) : null}
+                                    </>
+                                }
+                                endMessage={
+                                    <p className="text-center text-gray-500 dark:text-gray-400 p-4">
+                                        {t('home.endMessage')}
+                                    </p>
+                                }
+                            >
+                                <div id="recipeGrid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full p-5">
+                                    {displayedRecipes.map((recipe) => (
+                                        <RecipeCard recipe={recipe} key={recipe.id} />
+                                    ))}
+                                </div>
+                            </InfiniteScroll>
+                        ) : (
+                            <div className="h-max flex flex-col items-center justify-center mt-4 md:mt-6 xl:mt-8 w-full px-5 overflow-auto no-scrollbar space-y-2">
+                                {currentMethodUserCreated ? (
+                                    <>
+                                        <p className="text-lg font-bold">{t("profile.norecipescreated")}</p>
+                                        <p className="text-sm text-gray-500">{t("profile.norecipescreateddesc")}</p>
+                                    </>
+                                ) : (
+                                    <>
+                                        <p className="text-lg font-bold">{t("profile.nofavoriterecipes")}</p>
+                                        <p className="text-sm text-gray-500">{t("profile.nofavoriterecipesdesc")}</p>
+                                    </>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </div>
             )}
         </>

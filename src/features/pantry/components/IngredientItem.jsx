@@ -1,7 +1,7 @@
-// components/IngredientItem.jsx
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react';
 import { PencilSimple, Trash, Check } from '@phosphor-icons/react';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { createPopper } from '@popperjs/core';
 import { MoonLoader } from 'react-spinners';
 import { editIngredientPantry, deleteIngredientPantry } from '@/features/auth/services/authService';
 
@@ -16,61 +16,59 @@ const IngredientItem = ({
 }) => {
     const unitOptions = ['unit_gr', 'unit_ml', 'unit_u'];
 
-    /* Delete ingredient section */
-    const handleDeleteIngredient = async (ingredientId) => {
-        setDeletingIngredientId(ingredientId);
-        try {
-            const response = await deleteIngredientPantry(ingredientId);
-            if (response) {
-                setUserPantry(userPantry.filter(item => item.ingredient_id !== ingredientId));
-            }
-        } catch (error) {
-            console.error("Error deleting ingredient:", error);
-        } finally {
-            setDeletingIngredientId(null);
-        }
-    }
-
-    /* Edit ingredient section */
+    // Estado para edición
     const [editedValues, setEditedValues] = useState({});
+    const buttonRef = useRef(null);
+    const optionsRef = useRef(null);
+    const popperInstanceRef = useRef(null);
+
+    // Crear instancia Popper SOLO cuando se edita el ingrediente
+    useEffect(() => {
+        if (editingIngredientId === ingredient.ingredient_id && buttonRef.current && optionsRef.current) {
+            if (popperInstanceRef.current) {
+                popperInstanceRef.current.destroy();
+            }
+
+            popperInstanceRef.current = createPopper(buttonRef.current, optionsRef.current, {
+                placement: 'bottom-start',
+                modifiers: [
+                    { name: 'offset', options: { offset: [0, 4] } },
+                    { name: 'preventOverflow', options: { boundary: 'viewport' } },
+                ],
+            });
+        }
+
+        // Limpia Popper cuando deja de editar
+        return () => {
+            if (popperInstanceRef.current) {
+                popperInstanceRef.current.destroy();
+                popperInstanceRef.current = null;
+            }
+        };
+    }, [editingIngredientId, ingredient.ingredient_id]);
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-
         let newValue = value;
 
         if (name === 'quantity') {
-            // Solo aplica la lógica si es un número válido
-            if (value === '') {
-                newValue = '';
-            } else {
-                const num = Number(value);
-                if (isNaN(num)) {
-                    newValue = '';
-                } else if (num < 1) {
-                    newValue = 1;
-                } else if (num > 99999) {
-                    newValue = 99999;
-                } else {
-                    newValue = num;
-                }
-            }
+            const num = Number(value);
+            if (value === '') newValue = '';
+            else if (isNaN(num)) newValue = '';
+            else if (num < 1) newValue = 1;
+            else if (num > 99999) newValue = 99999;
+            else newValue = num;
         }
 
-        setEditedValues(prev => ({
-            ...prev,
-            [name]: newValue
-        }));
-    }
+        setEditedValues(prev => ({ ...prev, [name]: newValue }));
+    };
 
     const handleEditIngredient = (ingredientId) => {
         const ingredient = userPantry.find(item => item.ingredient_id === ingredientId);
         setEditingIngredientId(ingredientId);
         setEditingIngredient(true);
-        setEditedValues({
-            quantity: ingredient.quantity,
-            unit: ingredient.unit
-        });
-    }
+        setEditedValues({ quantity: ingredient.quantity, unit: ingredient.unit });
+    };
 
     const confirmEditIngredient = async (ingredientId) => {
         setConfirmEditingIngredient(true);
@@ -101,7 +99,22 @@ const IngredientItem = ({
             setEditingIngredient(false);
             setEditedValues({});
         }
-    }
+    };
+
+    const handleDeleteIngredient = async (ingredientId) => {
+        setDeletingIngredientId(ingredientId);
+        try {
+            const response = await deleteIngredientPantry(ingredientId);
+            if (response) {
+                setUserPantry(userPantry.filter(item => item.ingredient_id !== ingredientId));
+            }
+        } catch (error) {
+            console.error("Error deleting ingredient:", error);
+        } finally {
+            setDeletingIngredientId(null);
+        }
+    };
+
     return (
         <li key={ingredient.ingredient_id} className={`p-4 flex justify-between items-center space-x-10 ${editingIngredient && editingIngredientId === ingredient.ingredient_id ? 'dark:bg-neutral-900 bg-stone-200' : 'dark:bg-neutral-800 dark:hover:bg-neutral-700 hover:bg-stone-300'}`}>
             <span className="text-neutral-900 dark:text-white font-bold">{ingredient.name}</span>
@@ -117,13 +130,23 @@ const IngredientItem = ({
                                 className="w-15 p-1 rounded-md border dark:bg-neutral-700 dark:text-white text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             />
                         </div>
-                        <Listbox value={editedValues.unit ?? ingredient.unit ?? unitOptions[0]} onChange={(value) => setEditedValues({ ...editedValues, unit: value })}>
-                            <ListboxButton className="w-20 p-1 rounded-md border dark:bg-neutral-700 dark:text-white text-center">
+                        <Listbox
+                            value={editedValues.unit ?? unitOptions[0]}
+                            onChange={(value) => setEditedValues({ ...editedValues, unit: value })}
+                        >
+                            <ListboxButton ref={buttonRef} className="w-20 p-1 rounded-md border dark:bg-neutral-700 dark:text-white text-center">
                                 {t(editedValues.unit) || t(ingredient.unit)}
                             </ListboxButton>
-                            <ListboxOptions className="absolute z-10 bg-white dark:bg-neutral-800 rounded-md border dark:border-neutral-700 shadow-lg max-h-60 w-20 overflow-auto cursor-pointer">
+                            <ListboxOptions
+                                ref={optionsRef}
+                                className="z-50 bg-white dark:bg-neutral-800 rounded-md border dark:border-neutral-700 shadow-lg max-h-60 w-20 overflow-auto cursor-pointer"
+                            >
                                 {unitOptions.map((unit) => (
-                                    <ListboxOption key={unit} value={unit} className="p-2 dark:text-white dark:hover:bg-neutral-700 hover:bg-stone-300 border-b dark:border-neutral-700">
+                                    <ListboxOption
+                                        key={unit}
+                                        value={unit}
+                                        className="p-2 dark:text-white dark:hover:bg-neutral-700 hover:bg-stone-300 border-b dark:border-neutral-700"
+                                    >
                                         {t(unit)}
                                     </ListboxOption>
                                 ))}

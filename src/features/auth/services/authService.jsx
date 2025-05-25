@@ -103,7 +103,7 @@ export const logout = async () => {
     }
 }
 
-export const userRecipes = async () => {
+export const userRecipes = async (page, perPage = 12) => {
     try {
         const lang = localStorage.getItem('i18nextLng') || 'es';
         await withCSRF();
@@ -112,6 +112,8 @@ export const userRecipes = async () => {
             withXSRFToken: true,
             headers: { 'Content-Type': 'application/json' },
             lang,
+            page,
+            perPage,
         });
         return data;
     } catch (error) {
@@ -120,11 +122,11 @@ export const userRecipes = async () => {
         } else {
             notifyService.error("Can't connect with the server", { duration: 5000 });
         }
-        throw error;
+        return error;
     }
 }
 
-export const userFavorites = async () => {
+export const userFavorites = async (page, perPage = 12) => {
     try {
         const lang = localStorage.getItem('i18nextLng') || 'es';
         await withCSRF();
@@ -133,6 +135,8 @@ export const userFavorites = async () => {
             withXSRFToken: true,
             headers: { 'Content-Type': 'application/json' },
             lang,
+            page,
+            perPage,
         });
         return data;
     } catch (error) {
@@ -141,11 +145,11 @@ export const userFavorites = async () => {
         } else {
             notifyService.error("Can't connect with the server", { duration: 5000 });
         }
-        throw error;
+        return error;
     }
 }
 
-export const getUserPantry = async () => {
+export const getUserPantry = async (page = 1, perPage = 20) => {
     try {
         const lang = localStorage.getItem('i18nextLng') || 'es';
         await withCSRF();
@@ -153,7 +157,7 @@ export const getUserPantry = async () => {
             withCredentials: true,
             withXSRFToken: true,
             headers: { 'Content-Type': 'application/json' },
-            params: { lang },
+            params: { lang, page, perPage },
         });
         return data;
     } catch (error) {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import RecipeCard from '@/features/recipes/components/RecipeCard';
 import ContentLoader from '@/shared/components/ContentLoader.jsx';
@@ -9,7 +9,6 @@ import { debounce } from 'lodash';
 const Home = () => {
     const { t } = useTranslation();
     const [recipes, setRecipes] = useState([]);
-    const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const perPage = 21;

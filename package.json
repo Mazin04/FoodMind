@@ -17,6 +17,7 @@
     "@floating-ui/react": "^0.27.7",
     "@headlessui/react": "^2.2.3",
     "@phosphor-icons/react": "^2.1.7",
+    "@popperjs/core": "^2.11.8",
     "@react-oauth/google": "^0.12.1",
     "@tailwindcss/vite": "^4.0.17",
     "@theme-toggles/react": "^4.1.0",
