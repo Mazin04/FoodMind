@@ -30,7 +30,7 @@ const IngredientItem = ({
             }
 
             popperInstanceRef.current = createPopper(buttonRef.current, optionsRef.current, {
-                placement: 'bottom-start',
+                placement: 'bottom',
                 modifiers: [
                     { name: 'offset', options: { offset: [0, 4] } },
                     { name: 'preventOverflow', options: { boundary: 'viewport' } },
@@ -127,19 +127,19 @@ const IngredientItem = ({
                                 name='quantity'
                                 value={editedValues.quantity !== undefined ? editedValues.quantity : ingredient.quantity}
                                 onChange={handleInputChange}
-                                className="w-15 p-1 rounded-md border dark:bg-neutral-700 dark:text-white text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                className="w-15 p-1 rounded-md border border-neutral-600 outline-none focus:ring-2 focus:ring-blue-500 dark:bg-neutral-700 dark:text-white text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             />
                         </div>
                         <Listbox
                             value={editedValues.unit ?? unitOptions[0]}
                             onChange={(value) => setEditedValues({ ...editedValues, unit: value })}
                         >
-                            <ListboxButton ref={buttonRef} className="w-20 p-1 rounded-md border dark:bg-neutral-700 dark:text-white text-center">
+                            <ListboxButton ref={buttonRef} className="w-20 p-1 rounded-md border border-neutral-600 outline-none focus:ring-2 focus:ring-blue-500 dark:bg-neutral-700 dark:text-white text-center">
                                 {t(editedValues.unit) || t(ingredient.unit)}
                             </ListboxButton>
                             <ListboxOptions
                                 ref={optionsRef}
-                                className="z-50 bg-white dark:bg-neutral-800 rounded-md border dark:border-neutral-700 shadow-lg max-h-60 w-20 overflow-auto cursor-pointer"
+                                className="z-50 bg-white dark:bg-neutral-800 rounded-md border border-neutral-600 outline-none focus:ring-2 focus:ring-blue-500 dark:border-neutral-700 shadow-lg max-h-60 w-20 overflow-auto cursor-pointer"
                             >
                                 {unitOptions.map((unit) => (
                                     <ListboxOption
