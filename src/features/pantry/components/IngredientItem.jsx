@@ -134,12 +134,13 @@ const IngredientItem = ({
                             value={editedValues.unit ?? unitOptions[0]}
                             onChange={(value) => setEditedValues({ ...editedValues, unit: value })}
                         >
-                            <ListboxButton ref={buttonRef} className="w-20 p-1 rounded-md border border-neutral-600 outline-none focus:ring-2 focus:ring-blue-500 dark:bg-neutral-700 dark:text-white text-center">
+                            <div className='relative'>
+                                                            <ListboxButton ref={buttonRef} className="w-20 p-1 rounded-md border border-neutral-600 outline-none focus:ring-2 focus:ring-blue-500 dark:bg-neutral-700 dark:text-white text-center">
                                 {t(editedValues.unit) || t(ingredient.unit)}
                             </ListboxButton>
                             <ListboxOptions
                                 ref={optionsRef}
-                                className="z-50 bg-white dark:bg-neutral-800 rounded-md border border-neutral-600 outline-none focus:ring-2 focus:ring-blue-500 dark:border-neutral-700 shadow-lg max-h-60 w-20 overflow-auto cursor-pointer"
+                                className="absolute z-50 bg-white dark:bg-neutral-800 rounded-md border border-neutral-600 outline-none dark:border-neutral-700 shadow-lg max-h-60 w-20 overflow-auto cursor-pointer"
                             >
                                 {unitOptions.map((unit) => (
                                     <ListboxOption
@@ -151,6 +152,8 @@ const IngredientItem = ({
                                     </ListboxOption>
                                 ))}
                             </ListboxOptions>
+                            </div>
+
                         </Listbox>
                     </>
                 ) : (
