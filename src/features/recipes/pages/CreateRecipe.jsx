@@ -163,7 +163,7 @@ const CreateRecipe = () => {
         loading ? (
             <ContentLoader />
         ) : (
-            <div className="flex flex-col items-center justify-center h-screen w-full p-2 md:p-4">
+            <div className="flex flex-col items-center justify-center h-full w-full p-2 md:p-4">
                 <div className="w-full h-full rounded-lg p-4 xl:p-6 2xl:p-8 bg-stone-50 dark:bg-neutral-800 shadow-md overflow-y-auto text-neutral-900 dark:text-neutral-200">
                     <div className="flex items-center justify-between mb-4">
                         <h1 className="text-2xl font-bold text-center mb-4">

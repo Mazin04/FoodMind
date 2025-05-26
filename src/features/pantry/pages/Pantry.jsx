@@ -134,7 +134,7 @@ const Pantry = () => {
     return loading ? (
         <ContentLoader />
     ) : (
-        <div className="flex flex-col items-center justify-start w-full h-screen p-2 md:p-4">
+        <div className="flex flex-col items-center justify-start w-full h-full p-2 md:p-4">
             <div className="w-full max-w-5xl h-full rounded-lg p-4 xl:p-6 bg-stone-50 dark:bg-neutral-800 shadow-md">
                 <PantryHeaderButtons
                     pantryLength={userPantry.length}
@@ -182,11 +182,6 @@ const Pantry = () => {
                             }}
                             hasMore={hasMore}
                             loader={<ContentLoader />}
-                            endMessage={
-                                <p className="text-center text-gray-500 dark:text-gray-400 py-2">
-                                    {t('pantry.endMessage')}
-                                </p>
-                            }
                         >
                             <ul className="divide-y dark:divide-gray-200">
                                 {filteredPantry.map((item) => (

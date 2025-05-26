@@ -17,7 +17,7 @@ const Terms = () => {
                             {t("terms.title")}
                         </h1>
                         <button
-                            onClick={() => navigate(URLS.HOME)}
+                            onClick={() => navigate(URLS.MAIN)}
                             className="group flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
                             aria-label={t("terms.backToHome")}
                         >

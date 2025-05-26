@@ -254,7 +254,15 @@ const AuthForm = ({ isLoginMode, isDarkMode }) => {
               {t('login_google')}
             </p>
           </motion.div>
-
+          <p className={`text-sm text-center dark:text-white text-neutral-900 mt-4 flex flex-row space-x-2 ${!isLoginMode ? 'hidden' : ''}`}>
+            <p>{t('terms_conditions_apply')}</p>
+            <button
+              className='text-blue-500 hover:underline cursor-pointer'
+              onClick={() => navigate(URLS.TERMS)}
+            >
+              {t('terms_conditions')}
+            </button>
+          </p>
         </motion.div>
       </AnimatePresence>
     </>
