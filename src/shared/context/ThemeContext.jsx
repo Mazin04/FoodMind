@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
-const ThemeContext = createContext();
+export const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -28,5 +28,4 @@ export const ThemeProvider = ({ children }) => {
   );
 };
 
-// Hook personalizado para usar el contexto
 export const useTheme = () => useContext(ThemeContext);

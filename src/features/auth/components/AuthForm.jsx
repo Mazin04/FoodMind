@@ -162,7 +162,7 @@ const AuthForm = ({ isLoginMode, isDarkMode }) => {
               </AnimatePresence>
 
               <motion.div
-                className='flex-1 dark:bg-neutral-800 bg-blue-50 dark:text-white text-neutral-900 p-2 rounded-lg mt-4 w-full'
+                className='flex-1 dark:bg-neutral-800 bg-blue-50 dark:text-white text-neutral-900 p-2 rounded-lg mt-4 w-full flex'
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
@@ -172,7 +172,7 @@ const AuthForm = ({ isLoginMode, isDarkMode }) => {
                   <i className="pi pi-envelope" />
                   <span className='text-red-600 absolute bottom-1'>*</span>
                 </span>
-                <InputText type='email' placeholder={t('input_email')} id='input_email' value={email} className='focus:outline-none flex-grow text-sm md:text-base' keyfilter={"email"} onChange={handleEmailChange} />
+                <InputText type='email' placeholder={t('input_email')} id='input_email' value={email} className='focus:outline-none flex-grow text-sm md:text-base ' keyfilter={"email"} onChange={handleEmailChange} />
               </motion.div>
 
               <AnimatePresence mode="wait">
@@ -254,15 +254,15 @@ const AuthForm = ({ isLoginMode, isDarkMode }) => {
               {t('login_google')}
             </p>
           </motion.div>
-          <p className={`text-sm text-center dark:text-white text-neutral-900 mt-4 flex flex-row space-x-2 ${!isLoginMode ? 'hidden' : ''}`}>
+          <div className={`text-sm text-center dark:text-white text-neutral-900 mt-4 flex flex-col space-y-2 ${isLoginMode ? 'hidden' : ''}`}>
             <p>{t('terms_conditions_apply')}</p>
-            <button
+            <span
               className='text-blue-500 hover:underline cursor-pointer'
               onClick={() => navigate(URLS.TERMS)}
             >
               {t('terms_conditions')}
-            </button>
-          </p>
+            </span>
+          </div>
         </motion.div>
       </AnimatePresence>
     </>

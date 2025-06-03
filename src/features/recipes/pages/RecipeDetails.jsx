@@ -151,7 +151,15 @@ const RecipeDetails = () => {
     return (
         <>
             <div className="h-full w-full flex flex-col items-center justify-start text-neutral-900 dark:text-white">
-                <img src={image} alt={name || "Recipe"} className="w-full h-1/3 object-cover shadow-md shadow-black/80 dark:shadow-white/30 min-h-[200px] lg:min-h-[400px] rounded-b-sm not-draggable" />
+                {image !== null ? (
+                    <img src={image} alt={name || "Recipe"} className="w-full h-1/3 object-cover shadow-md shadow-black/80 dark:shadow-white/30 min-h-[200px] lg:min-h-[400px] rounded-b-sm not-draggable" />
+                ) : (
+                    <div
+                        className="w-full h-1/3 object-cover flex items-center justify-center bg-blue-200 dark:bg-white text-gray-600 text-lg font-semibold text-center p-4 rounded-t-lg"
+                    >
+                        {name}
+                    </div>
+                )}
 
                 {/* Head Section */}
                 <div className="flex flex-col lg:flex-row sm:items-center items-start space-y-2 sm:space-y-3 lg:space-y-0 justify-between w-full p-4">
@@ -164,11 +172,11 @@ const RecipeDetails = () => {
                     </div>
                     <div className="w-full overflow-x-auto">
                         <div className="flex flex-row items-center lg:justify-end space-x-3 sm:space-x-4 min-h-14">
-                            <button id={`tooltip-${id}`} className="p-2 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition">
+                            <button id={`tooltip-${id}`} className="p-2 rounded-full bg-blue-200 dark:bg-neutral-800 hover:bg-blue-300 dark:hover:bg-neutral-700 transition">
                                 {icon}
                             </button>
                             <Tooltip anchorSelect={`#tooltip-${id}`} place="bottom-end" style={{ position: "absolute", zIndex: 9999 }} content={tooltipLabel} />
-                            <button id={`tooltip-private${id}`} className="p-2 sm:p-3 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition" onClick={handlePrivateClick} disabled={recipe.creator.id !== userID}>
+                            <button id={`tooltip-private${id}`} className="p-2 sm:p-3 rounded-full bg-blue-200 dark:bg-neutral-800 hover:bg-blue-300 dark:hover:bg-neutral-700 transition" onClick={handlePrivateClick} disabled={recipe.creator.id !== userID}>
                                 {is_private ? (
                                     <FaLock size={24} className="text-gray-500" />
                                 ) : (
@@ -176,18 +184,20 @@ const RecipeDetails = () => {
                                 )}
                             </button>
                             {recipe.creator.id === userID ? (
-                                <button className="p-2 sm:p-2 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition" onClick={() => setDeleteRecipeModalIsOpen(true)}>
+                                <button className="p-2 sm:p-2 rounded-full bg-blue-200 dark:bg-neutral-800 hover:bg-blue-300 dark:hover:bg-neutral-700 transition" onClick={() => setDeleteRecipeModalIsOpen(true)}>
                                     <Trash size={windowWidth < 640 ? 24 : 32} className="text-red-500 cursor-pointer" />
                                 </button>
                             ) : null}
                             <Tooltip anchorSelect={`#tooltip-private${id}`} place="bottom-end" style={{ position: "absolute", zIndex: 9999 }} content={is_private ? t('recipe_private') : t('recipe_public')} />
-                            <button className="p-2 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition" onClick={handleFavoriteClick}>
+                            <button className="p-2 rounded-full bg-blue-200 dark:bg-neutral-800 hover:bg-blue-300 dark:hover:bg-neutral-700 transition" onClick={handleFavoriteClick}>
                                 <Heart size={windowWidth < 640 ? 24 : 32} weight={favorite ? 'fill' : 'duotone'} className="text-red-500 cursor-pointer" />
                             </button>
-                            <button className="p-2 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition" onClick={() => setShareModalIsOpen(true)}>
-                                <ShareNetwork size={windowWidth < 640 ? 24 : 32} weight="duotone" className="text-blue-500 cursor-pointer" />
-                            </button>
-                            <button className="p-2 sm:p-3 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition" onClick={() => exportToPdf(recipe)}>
+                            {!recipe.is_private ? (
+                                <button className="p-2 rounded-full bg-blue-200 dark:bg-neutral-800 hover:bg-blue-300 dark:hover:bg-neutral-700 transition" onClick={() => setShareModalIsOpen(true)}>
+                                    <ShareNetwork size={windowWidth < 640 ? 24 : 32} weight="duotone" className="text-blue-500 cursor-pointer" />
+                                </button>
+                            ) : null}
+                            <button className="p-2 sm:p-3 rounded-full bg-blue-200 dark:bg-neutral-800 hover:bg-blue-300 dark:hover:bg-neutral-700 transition" onClick={() => exportToPdf(recipe)}>
                                 <FaFilePdf size={24} className="text-red-500 cursor-pointer" />
                             </button>
                         </div>
@@ -197,9 +207,9 @@ const RecipeDetails = () => {
                 {/* Details Section */}
                 <div className="w-full h-full overflow-y-auto flex flex-col items-start space-y-4 pb-4">
                     {/* Types */}
-                    <div className="overflow-x-auto overflow-hidden min-h-12 flex flex-row items-center space-x-4 w-full py-2 px-4 bg-neutral-100 dark:bg-neutral-900">
+                    <div className="overflow-x-auto overflow-hidden min-h-12 flex flex-row items-center space-x-4 w-full py-2 px-4 bg-blue-100 dark:bg-neutral-900">
                         {types.map((type, idx) => (
-                            <div key={idx} className="flex items-center justify-center bg-neutral-200 dark:bg-neutral-800 rounded-full px-4 py-2 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition">
+                            <div key={idx} className="flex items-center justify-center bg-blue-200 dark:bg-neutral-800 rounded-full px-4 py-2 hover:bg-blue-300 dark:hover:bg-neutral-700 transition">
                                 <span className="text-sm font-semibold">{type}</span>
                             </div>
                         ))}

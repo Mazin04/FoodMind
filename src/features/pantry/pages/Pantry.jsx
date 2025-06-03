@@ -63,7 +63,6 @@ const Pantry = () => {
             if (page === 1) {
                 setUserPantry(items);
             } else {
-                console.log("Adding items to pantry:", items);
                 setUserPantry((prev) => [...prev, ...items]);
             }
             setCurrentPage(response.current_page);
@@ -130,12 +129,11 @@ const Pantry = () => {
         }
     };
 
-    // TODO: Add translations
     return loading ? (
         <ContentLoader />
     ) : (
         <div className="flex flex-col items-center justify-start w-full h-full p-2 md:p-4">
-            <div className="w-full max-w-5xl h-full rounded-lg p-4 xl:p-6 bg-stone-50 dark:bg-neutral-800 shadow-md">
+            <div className="w-full max-w-5xl h-full rounded-lg p-4 xl:p-6 bg-blue-50 dark:bg-neutral-800 shadow-md">
                 <PantryHeaderButtons
                     pantryLength={userPantry.length}
                     addIngredientLoading={addIngredientLoading}
@@ -153,7 +151,7 @@ const Pantry = () => {
                     <div className="w-full mt-4 mb-2">
                         <input
                             type="text"
-                            placeholder={t('search_ingredient')}
+                            placeholder={t('search')}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="w-full md:w-2/4 p-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-neutral-700 dark:text-white"
@@ -164,7 +162,7 @@ const Pantry = () => {
                 {/* Scrollable Pantry List */}
                 <div
                     id="pantryScroll"
-                    className="w-full max-h-[calc(100vh-150px)] overflow-y-auto"
+                    className={`${searchIngredient ? 'max-h-[calc(100vh-200px)]' : 'max-h-[calc(100vh-150px)]'} w-full overflow-y-auto`}
                 >
                     {filteredPantry.length !== 0 ? (
                         <InfiniteScroll
@@ -174,7 +172,6 @@ const Pantry = () => {
                             next={async () => {
                                 if (!hasMore) return;
                                 try {
-                                    console.log(currentPage);
                                     await fetchPantry(currentPage + 1);
                                 } catch (error) {
                                     console.error("Error fetching more pantry items:", error);

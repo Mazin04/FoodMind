@@ -128,9 +128,6 @@ const CreateRecipe = () => {
         });
 
         try {
-            for (const pair of formData.entries()) {
-                console.log(`${pair[0]}:`, pair[1]);
-            }
             const response = await createRecipe(formData);
             if (response.success) {
                 navigate(URLS.PROFILE);
@@ -149,7 +146,6 @@ const CreateRecipe = () => {
                 setIngredientList(ingredientList);
                 const recipeTypes = await getRecipeTypes();
                 setRecipeTypes(recipeTypes);
-                console.log(recipeTypes);
             } catch (error) {
                 console.error('Error fetching data:', error);
             } finally {
@@ -163,8 +159,8 @@ const CreateRecipe = () => {
         loading ? (
             <ContentLoader />
         ) : (
-            <div className="flex flex-col items-center justify-center h-full w-full p-2 md:p-4">
-                <div className="w-full h-full rounded-lg p-4 xl:p-6 2xl:p-8 bg-stone-50 dark:bg-neutral-800 shadow-md overflow-y-auto text-neutral-900 dark:text-neutral-200">
+            <div className="flex flex-col items-center justify-center h-full w-full p-2 md:p-4 bg-blue-100">
+                <div className="w-full h-full rounded-lg p-4 xl:p-6 2xl:p-8 bg-blue-50 dark:bg-neutral-800 shadow-md overflow-y-auto text-neutral-900 dark:text-neutral-200">
                     <div className="flex items-center justify-between mb-4">
                         <h1 className="text-2xl font-bold text-center mb-4">
                             {t('recipes.create.title')}

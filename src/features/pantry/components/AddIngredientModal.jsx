@@ -34,7 +34,7 @@ const AddIngredientModal = ({
             shouldCloseOnEsc={true}
             ariaHideApp={false}
         >
-            <div className="bg-white dark:bg-neutral-800 p-6 rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-6 m-4">
+            <div className="bg-blue-100 dark:bg-neutral-800 p-6 rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-6 m-4">
                 <h2 className="text-2xl font-bold text-center text-neutral-800 dark:text-white">
                     {t('add_ingredient')}
                 </h2>

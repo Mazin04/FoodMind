@@ -26,13 +26,6 @@ export const login = async (email, password) => {
         });
         return await getUser();
     } catch (error) {
-        if (error.response && error.response.status === 422) {
-            notifyService.error("Invalid credentials", { duration: 5000 });
-        } else if (error.response && error.response.status === 401) {
-            notifyService.error("Unauthorized", { duration: 5000 });
-        } else {
-            notifyService.error("Can't connect with the server", { duration: 5000 });
-        }
         throw error;
     }
 }

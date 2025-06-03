@@ -6,7 +6,7 @@ function PageLoader() {
   const { isDarkMode } = useTheme();
   return (
     <>
-      <div className="dark:bg-neutral-900 bg-stone-100 h-full flex flex-col justify-center items-center">
+      <div className="dark:bg-neutral-900 bg-transparent h-full flex flex-col justify-center items-center">
         <img
           src={isDarkMode ? b_logo : w_logo}
           alt="Logo loader"

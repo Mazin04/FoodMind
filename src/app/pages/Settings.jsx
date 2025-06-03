@@ -72,25 +72,25 @@ const Settings = () => {
                 <PageLoader />
             ) : (
                 <>
-                <div className="w-full h-full py-6 sm:p-6 flex flex-col items-center justify-center text-neutral-900 dark:text-white bg-stone-100 dark:bg-neutral-900">
+                <div className="w-full h-full py-6 sm:p-6 flex flex-col items-center justify-center text-neutral-900 dark:text-white bg-blue-100 dark:bg-neutral-900">
                     <h1 className="text-4xl font-bold">{t('settings')}</h1>
                     <div className='w-[90%] sm:w-[80%] lg:w-[60%] h-full flex flex-col items-start justify-start mt-8'>
-                        <div className='h-fit w-full flex flex-col items-start space-y-1 hover:bg-stone-300 dark:hover:bg-neutral-800 border-b-1 dark:border-neutral-700 p-4'>
+                        <div className='h-fit w-full flex flex-col items-start space-y-1 hover:bg-blue-300 dark:hover:bg-neutral-800 border-b-1 dark:border-neutral-700 p-4'>
                             <p className='font-bold'>{t('settings_username')}</p>
                             <p className='text-[#526470] dark:text-[#5b5e63]'>{name}</p>
                         </div>
 
-                        <div className='h-fit w-full flex flex-col items-start space-y-1 hover:bg-stone-300 dark:hover:bg-neutral-800 border-b-1 dark:border-neutral-700 p-4'>
+                        <div className='h-fit w-full flex flex-col items-start space-y-1 hover:bg-blue-300 dark:hover:bg-neutral-800 border-b-1 dark:border-neutral-700 p-4'>
                             <p className='font-bold'>{t('settings_email')}</p>
                             <p className='text-[#526470] dark:text-[#5b5e63]'>{email}</p>
                         </div>
 
-                        <div className='h-fit w-full flex flex-col items-start space-y-1 hover:bg-stone-300 dark:hover:bg-neutral-800 border-b-1 dark:border-neutral-700 p-4'>
+                        <div className='h-fit w-full flex flex-col items-start space-y-1 hover:bg-blue-300 dark:hover:bg-neutral-800 border-b-1 dark:border-neutral-700 p-4'>
                             <p className='font-bold'>{t('settings_date_account')}</p>
                             <p className='text-[#526470] dark:text-[#5b5e63]'>{date}</p>
                         </div>
 
-                        <div className='h-fit w-full flex flex-row items-center justify-between hover:bg-stone-300 dark:hover:bg-neutral-800 border-b-1 dark:border-neutral-700 p-4'>
+                        <div className='h-fit w-full flex flex-row items-center justify-between hover:bg-blue-300 dark:hover:bg-neutral-800 border-b-1 dark:border-neutral-700 p-4'>
                             <div>
                                 <p className='font-bold'>{t('settings_language')}</p>
                                 <p className='text-[#526470] dark:text-[#5b5e63]'>{t('settings_language_tip')}</p>
@@ -98,7 +98,7 @@ const Settings = () => {
                             <LanguageSelect />
                         </div>
 
-                        <div className='h-fit w-full flex flex-row items-center justify-between hover:bg-stone-300 dark:hover:bg-neutral-800 border-b-1 dark:border-neutral-700 p-4'>
+                        <div className='h-fit w-full flex flex-row items-center justify-between hover:bg-blue-300 dark:hover:bg-neutral-800 border-b-1 dark:border-neutral-700 p-4'>
                             <div>
                                 <p className='font-bold'>{t('settings_color_theme')}</p>
                                 <p className='text-[#526470] dark:text-[#5b5e63]'>{t('settings_color_theme_tip')}</p>
@@ -106,7 +106,7 @@ const Settings = () => {
                             <DarkInner duration={500} onToggle={toggleTheme} className='text-4xl' />
                         </div>
 
-                        <div className='h-fit w-full flex flex-row items-center justify-between hover:bg-stone-300 dark:hover:bg-neutral-800 border-b-1 dark:border-neutral-700 p-4'>
+                        <div className='h-fit w-full flex flex-row items-center justify-between hover:bg-blue-300 dark:hover:bg-neutral-800 border-b-1 dark:border-neutral-700 p-4'>
                             <div>
                                 <p className='font-bold'>{t('settings_sign_out')}</p>
                                 <p className='text-[#526470] dark:text-[#5b5e63]'>{t('settings_sign_out_tip')}</p>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { getUser, userRecipes, userFavorites as getUserFavorites } from "@/features/auth/services/authService";
 import { useTranslation } from "react-i18next";
-import useScrollHorizontal from "@/shared/lib/scrollHorizontal";
 import RecipeCard from "@/features/recipes/components/RecipeCard";
 
 import bg from "@/assets/images/backgrounds/bg-2.png";
@@ -10,7 +9,6 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 const Profile = () => {
     const { t } = useTranslation();
-    const scrollRef = useScrollHorizontal();
 
     const [userName, setUserName] = useState("User");
     const [, setAvatar] = useState(null);
@@ -156,7 +154,7 @@ const Profile = () => {
                         </p>
                     </div>
                     <div className="flex flex-col items-start justify-center mt-8 md:mt-10 xl:mt-12 w-full">
-                        <div id="tabs" className="flex flex-row items-start justify-start md:justify-center w-full px-5 space-x-4 overflow-auto no-scrollbar" ref={scrollRef}>
+                        <div id="tabs" className="flex flex-row items-start justify-start md:justify-center w-full px-5 space-x-4 overflow-auto no-scrollbar">
                             <h1
                                 className={`text-lg md:text-xl font-bold text-center cursor-pointer ${currentMethodUserCreated ? "border-b-2 border-blue-500" : "border-b-2 border-transparent"
                                     }`}

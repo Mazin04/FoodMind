@@ -84,7 +84,7 @@ const RecipeCard = ({ recipe }) => {
 
     return (
         <div
-            className="flex flex-col items-center justify-start w-full h-full bg-white dark:bg-neutral-800 rounded-lg shadow-md cursor-pointer max-h-[360px]"
+            className="flex flex-col items-center justify-start w-full h-full bg-blue-50 dark:bg-neutral-800 rounded-lg shadow-md cursor-pointer max-h-[360px]"
         >
             <div className="relative w-full h-115 overflow-hidden rounded-t-lg">
                 {recipe.image !== null ? (
@@ -124,13 +124,13 @@ const RecipeCard = ({ recipe }) => {
                     content={tooltipLabel}
                 />
                 {recipe.is_private && (
-                    <div className="absolute left-2 bottom-2 w-fit h-fit p-2 rounded-full bg-white/80 dark:bg-neutral-800/80 shadow-md">
+                    <div className="absolute left-2 bottom-2 w-fit h-fit p-2 rounded-full bg-black/80 dark:bg-neutral-800/80 shadow-md">
                         <FaLock size={15} className="text-white" />
                     </div>
                 )}
             </div>
 
-            <div className="flex flex-col items-start justify-between p-4 w-full h-full" onClick={handleClick}>
+            <div className="flex flex-col items-start justify-between p-4 w-full h-full rounded-b-xl" onClick={handleClick}>
                 <div className="flex flex-col items-start w-full">
                     <div className="flex items-center justify-between w-full mb-2">
                         <h2 className="text-xl font-bold text-neutral-900 dark:text-white">{name}</h2>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import useScrollHorizontal from '@/shared/lib/scrollHorizontal';
 import RecipeCard from "@/features/recipes/components/RecipeCard";
 import bg from "@/assets/images/backgrounds/bg-2.png";
 import ContentLoader from "@/shared/components/ContentLoader.jsx";
@@ -9,7 +8,6 @@ import { getUserById, getPublicRecipesByUser } from '@/features/auth/services/au
 
 const ProfileVisit = () => {
     const { t } = useTranslation();
-    const scrollRef = useScrollHorizontal();
     const navigate = useNavigate();
     const { id } = useParams();
 
@@ -90,7 +88,7 @@ const ProfileVisit = () => {
                         </p>
                     </div>
                     {Array.isArray(userCreatedRecipes) && userCreatedRecipes.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full p-5 overflow-auto no-scrollbar relative">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-4 md:mt-6 xl:mt-8 gap-4 w-full p-5 overflow-auto no-scrollbar relative">
                             {userCreatedRecipes.map((recipe) => (
                                 <RecipeCard recipe={recipe} key={recipe.id} />
                             ))}

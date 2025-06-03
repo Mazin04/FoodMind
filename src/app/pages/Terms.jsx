@@ -8,8 +8,8 @@ const Terms = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="dark:bg-neutral-900 bg-stone-100 min-h-screen py-10 px-4">
-            <div className="max-w-4xl mx-auto bg-white dark:bg-neutral-800 rounded-xl shadow-xl overflow-hidden">
+        <div className="dark:bg-neutral-900 bg-blue-100 min-h-screen py-10 px-4">
+            <div className="max-w-4xl mx-auto bg-blue-50 dark:bg-neutral-800 rounded-xl shadow-xl overflow-hidden">
                 {/* Header */}
                 <div className="sticky top-0 z-20 bg-white dark:bg-neutral-800 p-6 border-b border-neutral-200 dark:border-neutral-700">
                     <div className="flex items-center justify-between">
