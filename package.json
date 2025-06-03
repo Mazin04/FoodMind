@@ -58,6 +58,7 @@
     "react-to-pdf": "^2.0.0",
     "react-tooltip": "^5.28.1",
     "tailwindcss": "^4.1.4",
+    "tar-fs": "^3.0.9",
     "typewriter-effect": "^2.22.0"
   },
   "devDependencies": {
