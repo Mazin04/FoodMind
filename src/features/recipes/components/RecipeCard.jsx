@@ -98,7 +98,7 @@ const RecipeCard = ({ recipe }) => {
                     />
                 ) : (
                     <div
-                        className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-600 text-lg font-semibold text-center p-4 rounded-t-lg"
+                        className="w-full h-full flex items-center justify-center bg-blue-200 text-gray-600 text-lg font-semibold text-center p-4 rounded-t-lg"
                         onClick={handleClick}
                     >
                         {name}

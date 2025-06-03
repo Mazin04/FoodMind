@@ -146,7 +146,7 @@ const AddIngredientModal = ({
                 {/* Botones */}
                 <div className="flex justify-end space-x-4 pt-4">
                     <button
-                        className="px-4 py-2 rounded-md bg-gray-300 hover:bg-gray-400 text-neutral-900 dark:bg-neutral-600 dark:text-white dark:hover:bg-neutral-500"
+                        className="px-4 py-2 rounded-md bg-white hover:bg-red-400 text-neutral-900 dark:bg-neutral-600 dark:text-white dark:hover:bg-neutral-500"
                         onClick={onClose}
                         disabled={loading}
                     >

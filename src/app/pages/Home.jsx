@@ -8,7 +8,7 @@ import { debounce } from 'lodash';
 
 const Home = () => {
     const { t } = useTranslation();
-    const [recipes, setRecipes] = useState([]);
+    const [recipes, setRecipes] = useState(null);
     const [hasMore, setHasMore] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const perPage = 21;
@@ -111,13 +111,19 @@ const Home = () => {
                             ))}
                         </div>
                     </InfiniteScroll>
-                ) : recipes?.length === 0 ? (
+                ) : recipes?.length <= 0 ? (
                     <div className="flex items-center justify-center h-full">
                         <p className="text-gray-500 dark:text-gray-400">
-                            {debouncedSearchTerm ? t('home.noResults') : t('home.noRecipes')}
+                            {debouncedSearchTerm ? t('home.noResults') : null}
                         </p>
                     </div>
-                ) : null}
+                ) : (
+                    <div className="flex items-center justify-center h-full">
+                        <p className="text-gray-500 dark:text-gray-400">
+                            {t('home.noRecipes')}
+                        </p>
+                    </div>
+                )}
 
 
             </div>
