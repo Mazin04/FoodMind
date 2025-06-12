@@ -24,6 +24,7 @@
     "@tailwindcss/vite": "^4.0.17",
     "@theme-toggles/react": "^4.1.0",
     "axios": "^1.8.4",
+    "brace-expansion": "^4.0.1",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.3",
     "i18next": "^24.2.3",
