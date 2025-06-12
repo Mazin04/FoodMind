@@ -54,6 +54,7 @@ const Pantry = () => {
 
     useEffect(() => {
         fetchPantry(1);
+        document.title = t('Foodmind - Despensa');
     }, []);
 
     const fetchPantry = async (page) => {

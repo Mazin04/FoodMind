@@ -21,6 +21,8 @@ function App() {
   const { isDarkMode, toggleTheme } = useTheme();
   const [isLoginMode, setIsLoginMode] = useState(true);
 
+  document.title = "FoodMind";
+
   const changeSignMode = () => {
     setIsLoginMode((prevMode) => !prevMode);
   };

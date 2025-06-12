@@ -140,6 +140,7 @@ const CreateRecipe = () => {
     }
 
     useEffect(() => {
+        document.title = "FoodMind - Crear receta";
         async function fetchData() {
             try {
                 const ingredientList = await getIngredientList();
